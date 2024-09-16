@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen bg-slate-700 dark:text-zinc-50">
+    <div class="min-h-screen dark:bg-slate-700 dark:text-zinc-50">
         <div class="flex flex-row justify-between mr-10">
             <div class="text-3xl text-cyan-200 ml-14 ">Nuxt Playground</div>
             <ul class="flex flex-row justify-center gap-7 align-top text-md">

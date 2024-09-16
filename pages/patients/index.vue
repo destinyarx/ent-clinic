@@ -4,7 +4,7 @@
     </div>
     <div class="flex justify-center">
         <Button label="Check" />
-        <DatePicker v-model="date" />
+        <DatePicker v-model="date" class="ml-4"/>
     </div>
 </template>
 
