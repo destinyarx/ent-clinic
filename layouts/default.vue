@@ -18,10 +18,10 @@
 
 <script setup lang="ts">
 const headers = [
-    { title: 'Products', url: '/products' },
-    { title: 'Users', url: '/users' },
     { title: 'Patients', url: '/patients' },
-    { title: 'Accounts', url: '/accounts' },
+    { title: 'Users', url: '/users' },
+    { title: 'Schedule', url: '/schedule' },
     { title: 'Summary', url: '/summary' },
+    { title: 'Accounts', url: '/accounts' },
 ]
 </script>
