@@ -10,7 +10,7 @@
                 </li>
             </ul>
         </div>
-        <div class="min-w-full dark:text-zinc-50">
+        <div class="min-w-full dark:text-zinc-50 mx-5">
             <slot></slot>
         </div>
     </div>
