@@ -8,7 +8,8 @@
             loading....
         </div>
 
-        {{ user }}
+        <!-- {{ token }} -->
+        <!-- {{ user }} -->
 
         <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
     </div>
@@ -17,7 +18,7 @@
 <script setup lang="ts">
 
 definePageMeta({
-  layout: 'login-layout'
+    layout: 'login-layout'
 })
 
 const supabase = useSupabaseClient()
@@ -27,7 +28,6 @@ const loading = ref(false)
 const token = ref()
 
 const user = useSupabaseUser()
-console.log(user)
 
 const session = await supabase.auth.getSession();
 token.value = session.data.session?.access_token;

@@ -20,9 +20,9 @@
 </template>
 
 <script setup lang="ts">
-const supabase = useSupabaseClient()
-const user = useSupabaseUser()
-
+const supabase = useSupabaseClient();
+const supabaseUser = useSupabaseUser();
+const user = ref(supabaseUser);
 
 const headers = [
     { title: 'Patients', url: '/patients' },

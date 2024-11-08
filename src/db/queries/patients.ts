@@ -1,6 +1,7 @@
 import { asc, between, count, eq, getTableColumns, sql } from 'drizzle-orm';
 import { db } from '../index';
-import { patients, InsertPatient } from '../schema';
+import type { InsertPatient } from '../schema/patients';
+import { patients } from '../schema/patients';
 
 export async function getAllPatients() {
     return db

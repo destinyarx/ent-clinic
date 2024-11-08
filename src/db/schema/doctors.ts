@@ -10,6 +10,10 @@ export const doctors = pgTable("doctors", {
     createdAt: timestamp("created_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
     updatedAt: timestamp("updated_at", { mode: 'string' }),
     deletedAt: timestamp("deleted_at", { mode: 'string' }),
+}, (table) => {
+    return {
+        usersIdIdx: index().using("btree", table.usersId.asc().nullsLast()),
+    }
 });
 
 const insertDoctor = typeof users.$inferInsert;
