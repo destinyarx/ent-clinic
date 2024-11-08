@@ -7,11 +7,19 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "introspect": "drizzle-kit pull"
   },
   "dependencies": {
+    "@nuxtjs/supabase": "^1.2.2",
     "@primevue/themes": "^4.0.7",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.36.0",
+    "jsonwebtoken": "^9.0.2",
     "nuxt": "^3.13.0",
+    "pg": "^8.13.1",
+    "postgres": "^3.4.5",
+    "primeicons": "^7.0.0",
     "primevue": "^4.0.7",
     "vue": "latest",
     "vue-router": "latest"
@@ -19,7 +27,9 @@
   "devDependencies": {
     "@primevue/nuxt-module": "^4.0.7",
     "autoprefixer": "^10.4.20",
+    "drizzle-kit": "^0.27.0",
     "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.11"
+    "tailwindcss": "^3.4.11",
+    "tsx": "^4.19.1"
   }
 }
