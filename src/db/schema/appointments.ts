@@ -7,12 +7,17 @@ export const appointments = pgTable("appointments", {
     id: serial("id").primaryKey().notNull(),
     patientId: integer("patient_id").references(() => patients.id).notNull(),
     appointmentDateTime: timestamp("updated_at", { mode: 'string' }).notNull(),
-    status: varchar({ length: 20 }),
-    doctorsId: integer("doctors_id").references(()=> doctors.id),
+    doctorStatus: varchar("doctor_status", { length: 20 }),
+    patientStatus: varchar("patient_status", { length: 20 }),
+    doctorId: integer("doctor_id").references(()=> doctors.id),
     reasonForVisit: varchar("reason_for_visit", { length: 255 }),
     createdAt: timestamp("created_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
     updatedAt: timestamp("updated_at", { mode: 'string' }),
     deletedAt: timestamp("deleted_at", { mode: 'string' }),
+}, (table) => {
+    return {
+        doctorIdIdx: index().using("btree", table.doctorId.asc().nullsLast()),
+    }
 });
 
 const insertAppointment = typeof appointments.$inferInsert;
