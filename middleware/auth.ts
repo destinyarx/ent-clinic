@@ -1,7 +1,10 @@
-export default defineEventHandler(async (event) => {
-    const user = useSupabaseUser()
+import { defineNuxtRouteMiddleware, navigateTo } from '#app'
 
+export default defineNuxtRouteMiddleware((to, from) => {
+    const user = useSupabaseUser()
+    
+    // If there is no authenticated user, redirect to login
     if (!user.value) {
-        throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
+        return navigateTo('/login')
     }
 })

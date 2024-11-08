@@ -8,15 +8,18 @@
             loading....
         </div>
 
-        <!-- {{ user }} -->
-
-        {{ token }}
+        {{ user }}
 
         <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
     </div>
 </template>
 
 <script setup lang="ts">
+
+definePageMeta({
+  layout: 'login-layout'
+})
+
 const supabase = useSupabaseClient()
 const email = ref('')
 const password = ref('')
