@@ -1,49 +1,89 @@
 <template>
-    <div class="flex flex-col justify-center gap-3 items-center mt-20 text-2xl">
-        <InputText v-model="email" variant="outlined" placeholder="Username" />
-        <InputText v-model="password" variant="outlined" placeholder="Password"/>
-        <Button @click="submit" type="submit" severity="secondary" label="Login" />
+    <div class="flex min-h-screen bg-slate-700">
+        <div class="flex w-1/2 mt-20">
+            <div>
+                
+            </div>
+        </div>
+        <div class="flex items-center justify-center w-1/2">
+            <Card class="w-full mr-10">
+                <template #content>
+                    <div class="w-full">
+                        <div class="flex flex-col justify-center">
+                            <div class="text-center text-5xl my-14">
+                                Login 
+                            </div>
 
-        <div v-if="loading" class="text-cyan-400 text-lg mt-5">
-            loading....
+                            <label for="username" class="font-bold text-xl ml-28 mb-2">Username</label>
+                            <div class="w-full flex justify-center mb-14">
+                                <InputText v-model="username" type="text" placeholder="Username" class="w-3/4" />
+                            </div>
+
+                            <label for="password" class="font-bold text-xl ml-28 mb-2">Password</label>
+                            <div class="w-full flex justify-center">
+                                <InputText v-model="password" type="text" placeholder="Password" class="w-3/4" />
+                            </div>
+
+                            <div v-if="loginError" class="text-sm text-red-400 ml-28">
+                                Login failed. Please check your credentials and try again.
+                            </div>
+                            
+
+                            <div class="flex justify-center">
+                                <Button @click="login" label="Login" severity="success" class="mt-10 mb-5 w-24" rounded/>
+                            </div>
+                        </div>
+                    </div>
+
+                </template>
+            </Card>
+        </div>
+    </div>
+
+    <div class="flex flex-col mt-20">
+        <div class="w-1/4">
+            <InputText type="text" v-model="username" />
         </div>
 
-        <!-- {{ token }} -->
-        <!-- {{ user }} -->
-
-        <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+        <div>
+            <InputText type="text" v-model="password" />
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-
 definePageMeta({
-    layout: 'login-layout'
-})
+    layout: false
+});
+
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const supabase = useSupabaseClient()
-const email = ref('')
+const username = ref('')
 const password = ref('')
 const loading = ref(false)
 const token = ref()
+const loginError = ref(false);
 
 const user = useSupabaseUser()
-
 const session = await supabase.auth.getSession();
 token.value = session.data.session?.access_token;
 
-const submit = async () => {
+const login = async () => {
     loading.value = true;
 
     const { data, error } = await supabase.auth.signInWithPassword({
-        email: email.value,
+        email: username.value,
         password: password.value,
-        options: {
-            emailRedirectTo: 'https://example.com/welcome',
-        },
     })
+
+    if (error) loginError.value = true;
+
+    if (data && !error) router.push('/');
 
     console.log(error)
     loading.value = false;
 }
+
 </script>
