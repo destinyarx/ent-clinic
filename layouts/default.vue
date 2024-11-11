@@ -21,7 +21,12 @@
 </template>
 
 <script setup lang="ts">
-const supabase = useSupabaseClient()
+const supabase = useSupabaseClient();
+const user = useSupabaseUser();
+
+const session = await supabase.auth.getSession();
+const token = ref();
+token.value = session.data.session?.access_token;
 
 const headers = [
     { title: 'Patients', url: '/patients' },
