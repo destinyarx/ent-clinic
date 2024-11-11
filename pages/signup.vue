@@ -11,26 +11,40 @@
                     <div class="w-full">
                         <div class="flex flex-col justify-center">
                             <div class="text-center text-5xl my-14">
-                                Login 
+                                Sign-up 
+                            </div>
+
+                            <label for="name" class="font-medium text-xl ml-28 mb-2">Name</label>
+                            <div class="w-full flex justify-center mb-12">
+                                <InputText v-model="name" type="text" placeholder="Name" class="w-3/4" />
+                            </div>
+
+                            <label for="name" class="font-medium text-xl ml-28 mb-2">Email</label>
+                            <div class="w-full flex justify-center mb-12">
+                                <InputText v-model="email" type="text" placeholder="Email" class="w-3/4" />
                             </div>
 
                             <label for="username" class="font-medium text-xl ml-28 mb-2">Username</label>
-                            <div class="w-full flex justify-center mb-14">
+                            <div class="w-full flex justify-center mb-12">
                                 <InputText v-model="username" type="text" placeholder="Username" class="w-3/4" />
                             </div>
 
                             <label for="password" class="font-medium text-xl ml-28 mb-2">Password</label>
-                            <div class="w-full flex justify-center">
+                            <div class="w-full flex justify-center mb-12">
                                 <InputText v-model="password" type="text" placeholder="Password" class="w-3/4" />
                             </div>
 
-                            <div v-if="loginError" class="text-sm text-red-400 ml-28">
-                                Login failed. Please check your credentials and try again.
-                            </div>
-                            
+                            <label for="password" class="font-medium text-xl ml-28 mb-2">Re-enter your Password</label>
+                            <div class="w-full flex justify-center">
+                                <InputText v-model="verifyPassword" type="text" placeholder="Password" class="w-3/4" />
+                            </div> 
 
                             <div class="flex justify-center">
                                 <Button @click="login" label="Login" severity="success" class="mt-10 mb-5 w-24" rounded/>
+                            </div>
+
+                            <div v-if="loginError" class="text-sm text-red-400 ml-28">
+                                Sign-up failed. Please check your infos and try again.
                             </div>
                         </div>
                     </div>
@@ -49,31 +63,8 @@ definePageMeta({
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
-const supabase = useSupabaseClient()
-const username = ref('')
-const password = ref('')
-const loading = ref(false)
-const token = ref()
-const loginError = ref(false);
-
-const user = useSupabaseUser()
-const session = await supabase.auth.getSession();
-token.value = session.data.session?.access_token;
-
-const login = async () => {
-    loading.value = true;
-
-    const { data, error } = await supabase.auth.signInWithPassword({
-        email: username.value,
-        password: password.value,
-    })
-
-    if (error) loginError.value = true;
-
-    if (data && !error) router.push('/');
-
-    console.log(error)
-    loading.value = false;
+const signup = async () => {
+    
 }
 
 </script>
