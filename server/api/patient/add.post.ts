@@ -3,13 +3,17 @@ import { addPatient } from '@/src/db/queries/patients';
 export default defineEventHandler(async (event) => {
     try {
         const body = await readBody(event);
-        const { firstName, middleName, lastName, address } = body;
+        const { patientData } = body;
+
+
         const patientsInfo = {
-            firstName: firstName,
-            middleName: middleName,
-            lastName: lastName,
-            address: address,
-            birthdate: "2012-09-29",
+            firstName: patientData.firstName,
+            middleName: patientData.middleName,
+            lastName: patientData.lastName,
+            address: patientData.address,
+            birthdate: patientData.birthdate,
+            gender: patientData.gender?.code,
+            contactNumber: patientData.contactNumber
         }
 
         const response = await addPatient(patientsInfo);
@@ -19,7 +23,8 @@ export default defineEventHandler(async (event) => {
     } catch (error) {
         return {
             success: false,
-            message: error.message
+            message: error.message || "Unknown error",
+            data: data,
         }
     }
 })

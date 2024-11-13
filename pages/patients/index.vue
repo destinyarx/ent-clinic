@@ -7,12 +7,16 @@
         <Button @click="showPatientModal()" type="button" label="Add Patient" icon="pi pi-plus" />
     </div>
 
-    <Dialog v-model:visible="visible" modal header="Add Patient" :style="{ width: '25rem' }">
-        <div>Hello World!</div>
+    <Dialog v-model:visible="visible" modal header="Add Patient" :style="{ width: '50rem' }">
+        <addPatientForm />
+
     </Dialog>
 </template>
 
 <script setup lang="ts">
+import addPatientForm from '@/components/Forms/addPatientForm.vue';
+
+
 const patients = ref([]);
 const firstName = ref('');
 const middleName = ref('');

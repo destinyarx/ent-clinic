@@ -1,11 +1,40 @@
 <template>
-    <div class="flex flex-col justify-center gap-3 items-center mt-20 text-2xl">
-        <InputText v-model="firstName" variant="outlined" placeholder="First Name" />
-        <InputText v-model="middleName" variant="outlined" placeholder="Middle Name" />
-        <InputText v-model="lastName" variant="outlined" placeholder="Last Name" />
-        <InputText v-model="address" variant="outlined" placeholder="Address" />
+    <div class="flex flex-col text-lg">
+        <div class="flex flex-row mb-8">
+            <div class="w-1/3 mr-5">
+                <InputText v-model="patientFormData.firstName" variant="outlined" placeholder="First Name"  />
+            </div>
 
-        <Button @click="addPatient" severity="success" label="Add Patient" />
+            <div class="w-1/3 mr-5">
+                <InputText v-model="patientFormData.middleName" variant="outlined" placeholder="Middle Name" />
+            </div>
+
+            <div class="w-1/3">
+                <InputText v-model="patientFormData.lastName" variant="outlined" placeholder="Last Name" />
+            </div>
+        </div>
+
+        <div class="flex flex-row justify-between mb-8">
+            <div class="w-1/3 mr-5">
+                <Select v-model="patientFormData.gender" :options="genderOptions" optionLabel="name" placeholder="Gender" class="w-full text-base"/>
+            </div>
+
+            <div class="w-1/3 mr-5">
+                <DatePicker v-model="patientFormData.birthdate" showIcon class="w-full text-base"/>
+            </div>
+
+            <div class="w-1/3">
+                <InputNumber v-model="patientFormData.contactNumber" variant="outlined" placeholder="Contact Number" class="w-full" />
+            </div>
+        </div>
+
+        <div class="w-full mb-8">
+            <InputText v-model="patientFormData.address" variant="outlined" placeholder="Address" class="w-full"/>
+        </div>
+
+        <div class="flex justify-center">
+            <Button @click="addPatient" severity="success" label="Add Patient" class="mt-5" />
+        </div>
 
         <div v-if="loading" class="text-cyan-400 text-lg mt-5">
             loading....
@@ -14,27 +43,37 @@
 </template>
 
 <script setup lang="ts">
-const firstName = ref();
-const middleName = ref();
-const lastName = ref();
-const address = ref();
+const patientFormData = ref({
+    firstName: null,
+    middleName: null,
+    lastName: null,
+    address: null,
+    gender: null,
+    contactNumber: null,
+    birthdate: null,
+    loading: false,
+});
+
 const loading = ref(false);
+const genderOptions = ref([
+    { name: 'Male', code: 'M' },
+    { name: 'Female', code: 'F' },
+    { name: 'Choose not to disclose', code: 'X' },
+]);
 
 const addPatient = async () => {
     loading.value = true
+    const patientData = { ...patientFormData.value };
 
     try {
         const response = await $fetch('/api/patient/add', {
             method: 'POST',
             body: {
-                firstName: firstName.value,
-                middleName:  middleName.value,
-                lastName: lastName.value,
-                address: address.value
+                patientData: patientData
             }
         })  
 
-        console.log(response.data);
+        console.log(patientData);
     } catch (error) {
         console.log(error)
     }

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div class="flex flex-col justify-center gap-3 items-center mt-20 text-2xl">
         <InputText v-model="firstName" variant="outlined" placeholder="First Name" />
         <InputText v-model="middleName" variant="outlined" placeholder="Middle Name" />
@@ -45,7 +45,8 @@ const addPatient = async () => {
                 firstName: firstName.value,
                 middleName:  middleName.value,
                 lastName: lastName.value,
-                address: address.value
+                address: address.value,
+                gender: "M",
             }
         })  
 
@@ -70,4 +71,19 @@ onMounted(() => {
 })
 
 
+</script> -->
+
+
+<template>
+    <div>
+
+    </div>
+</template>
+
+<script setup lang="ts">
+
 </script>
+
+<style scoped>
+
+</style>
