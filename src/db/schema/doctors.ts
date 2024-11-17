@@ -4,15 +4,15 @@ import { users } from "./users"
 
 export const doctors = pgTable("doctors", {
     id: serial("id").primaryKey().notNull(),
-    usersId: integer("users_id").references(() => users.id).notNull(),
+    supabaseId: varchar("supabase_id", { length: 100 }).references(() => users.supabaseId).notNull().unique(),
     contactNumber: integer("contact_number"), 
-    licenseNumber: varchar("license_number", { length: 30 }),
+    licenseNumber: varchar("license_number", { length: 30 }).unique(),
     createdAt: timestamp("created_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
     updatedAt: timestamp("updated_at", { mode: 'string' }),
     deletedAt: timestamp("deleted_at", { mode: 'string' }),
 }, (table) => {
     return {
-        usersIdIdx: index().using("btree", table.usersId.asc().nullsLast()),
+        supabaseIdIdx: index().using("btree", table.supabaseId.asc().nullsLast()),
     }
 });
 

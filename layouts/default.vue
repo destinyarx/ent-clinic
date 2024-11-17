@@ -26,6 +26,7 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
+const router = useRouter();
 
 const supabase = useSupabaseClient();
 const user = useSupabaseUser();
@@ -45,7 +46,10 @@ const headers = [
 
 async function signOut() {
   const { error } = await supabase.auth.signOut()
-  console.log(error)
+  
+  if (!error) {
+    router.push('/');
+  }
 }
 
 </script>

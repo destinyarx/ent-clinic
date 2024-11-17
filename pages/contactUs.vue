@@ -6,7 +6,7 @@
             </div>
         </div>
         <div class="flex items-center justify-center w-1/2">
-            <Card class="w-full mr-10">
+            <Card class="w-full mr-20">
                 <template #content>
                     <div class="w-full">
                         <div class="flex flex-col justify-center">
