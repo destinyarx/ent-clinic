@@ -9,14 +9,14 @@ export const appointments = pgTable("appointments", {
     appointmentDateTime: timestamp("updated_at", { mode: 'string' }).notNull(),
     doctorStatus: varchar("doctor_status", { length: 20 }),
     patientStatus: varchar("patient_status", { length: 20 }),
-    doctorId: integer("doctor_id").references(()=> doctors.id),
+    supabaseId: varchar("supabase_id", { length: 100 }).references(() => doctors.supabaseId).notNull().unique(),
     reasonForVisit: varchar("reason_for_visit", { length: 255 }),
     createdAt: timestamp("created_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
     updatedAt: timestamp("updated_at", { mode: 'string' }),
     deletedAt: timestamp("deleted_at", { mode: 'string' }),
 }, (table) => {
     return {
-        doctorIdIdx: index().using("btree", table.doctorId.asc().nullsLast()),
+        doctorSupabaseIdIdx: index().using("btree", table.supabaseId.asc().nullsLast()),
     }
 });
 

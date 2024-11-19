@@ -21,3 +21,18 @@ export async function deletePatient(id: Number) {
         .set({ deletedAt: sql`NOW()` })
         .where(eq(patients.id, id));
 }
+
+export async function updatePatient(patientsInfo: InsertPatient) {
+    return db.update(patients)
+        .set({ 
+            firstName: patientsInfo.firstName,
+            middleName: patientsInfo.middleName,
+            lastName: patientsInfo.lastName,
+            gender: patientsInfo.gender,
+            birthdate: patientsInfo.birthdate,
+            contactNumber: patientsInfo.contactNumber,
+            address: patientsInfo.address,            
+            updatedAt: sql`NOW()`,
+        })
+        .where(eq(patients.id, patientsInfo.id));
+}

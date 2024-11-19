@@ -58,13 +58,13 @@
 
     <Dialog v-model:visible="visible" modal header="Add Patient" :style="{ width: '50rem' }">
         <addPatientForm :action="formAction" :formData="patientForm"
-            @insertDone="insertDone()"/>
+            @processDone="closeModal()"/>
     </Dialog>
 </template>
 
 <script setup lang="ts">
 import { nextTick } from 'vue';
-import addPatientForm from '@/components/Forms/addPatientForm.vue';
+import addPatientForm from '~/components/Forms/patientForm.vue';
 
 
 const patients = ref();
@@ -103,7 +103,6 @@ const fetchAllPatients = async () => {
 
 const updatePatient = (data: Number) => {
     formAction.value = 'update';
-    console.log(data)
     patientForm.value.id = data.id;
     patientForm.value.firstName = data.firstName;
     patientForm.value.middleName = data.middleName;
@@ -138,7 +137,7 @@ const showPatientModal = () => {
     fetchAllPatients();
 }
 
-const insertDone = () => {
+const closeModal = () => {
     visible.value = false;
     fetchAllPatients();
 }

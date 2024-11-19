@@ -48,7 +48,7 @@ const props = defineProps<{
     formData: Object
 }>();
 
-const emit = defineEmits(['insertDone']);
+const emit = defineEmits(['processDone']);
 
 const loading = ref(false);
 const genderOptions = ref([
@@ -67,7 +67,7 @@ const addPatient = async () => {
                 patientData: props.formData
             }
         })  
-        emit('insertDone');
+        emit('processDone');
     } catch (error) {
         console.log(error)
     }
@@ -76,8 +76,20 @@ const addPatient = async () => {
 }
 
 const updatePatient = async () => {
-    console.log('Patient Updated');
+    loading.value = true;
 
-    // add api calls to update a patient
+    await $fetch('/api/patient/update', {
+        method: 'POST',
+        body: {
+            patientData: props.formData
+        }
+    }).then(response => {
+        console.log(response.data)
+    }).catch(error => {
+        console.log(error)
+    })
+    
+    emit('processDone');
+    loading.value = false;
 }
 </script>
