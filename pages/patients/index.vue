@@ -11,11 +11,13 @@
         Loading...
     </div>
 
+    <!-- {{ session.data.session?.access_token }} -->
+
     <div class="flex justify-center mt-10">
         <DataTable :value="patients" stripedRows tableStyle="min-width: 50rem">
             <template #header>
                 <div class="flex flex-wrap items-center justify-between gap-2">
-                    <span class="text-xl font-bold">Products</span>
+                    <span class="text-xl font-bold">Patients</span>
                     <Button @click="fetchAllPatients()" label="Refresh Table" />
                 </div>
             </template>
@@ -58,14 +60,13 @@
 
     <Dialog v-model:visible="visible" modal header="Add Patient" :style="{ width: '50rem' }">
         <addPatientForm :action="formAction" :formData="patientForm"
-            @processDone="closeModal()"/>
+            @processDone="resetPatientForm(), fetchAllPatients()"/>
     </Dialog>
 </template>
 
 <script setup lang="ts">
 import { nextTick } from 'vue';
 import addPatientForm from '~/components/Forms/patientForm.vue';
-
 
 const patients = ref();
 const formAction = ref();
@@ -86,6 +87,10 @@ const lastName = ref('');
 const address = ref('');
 const loading = ref(false);
 const visible = ref(false);
+const database_jwt = ref();
+
+const supabase = useSupabaseClient()
+const session = await supabase.auth.getSession();
 
 
 const fetchAllPatients = async () => {
@@ -112,6 +117,19 @@ const updatePatient = (data: Number) => {
     patientForm.value.contactNumber = data.contactNumber;
     patientForm.value.birthdate = data.birthdate;
     visible.value = true;
+}
+
+const resetPatientForm = () => {
+    formAction.value = null;
+    patientForm.value.id = null;
+    patientForm.value.firstName = null;
+    patientForm.value.middleName = null;
+    patientForm.value.lastName = null;
+    patientForm.value.address = null;
+    patientForm.value.gender = null;
+    patientForm.value.contactNumber = null;
+    patientForm.value.birthdate = null;
+    visible.value = false;
 }
 
 const deletePatient = async (id: Number) => {

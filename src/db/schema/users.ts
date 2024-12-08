@@ -11,6 +11,7 @@ export const users = pgTable(
         middleName: varchar("middle_name", { length: 30 }),
         lastName: varchar("last_name", { length: 30 }),
         supabaseId: varchar("supabase_id", { length: 100 }).notNull().unique(),
+        contactNumber: bigint("contact_number", { mode: 'number' }),
     }
 );
 

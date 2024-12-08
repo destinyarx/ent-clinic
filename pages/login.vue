@@ -21,7 +21,7 @@
 
                             <label for="password" class="font-medium text-xl ml-28 mb-2">Password</label>
                             <div class="w-full flex justify-center">
-                                <InputText v-model="password" @keyup="login()" type="text" placeholder="Password" class="w-3/4" />
+                                <InputText v-model="password" @keydown.enter="login()" type="text" placeholder="Password" class="w-3/4" />
                             </div>
 
                             <div v-if="loginError" class="text-sm text-red-400 ml-28">

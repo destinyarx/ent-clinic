@@ -1,4 +1,6 @@
 import { defineNuxtRouteMiddleware, navigateTo } from '#app'
+import jwt from "jsonwebtoken";
+
 
 const publicLinks = [
     "/",

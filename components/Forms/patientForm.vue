@@ -59,10 +59,16 @@ const genderOptions = ref([
 
 const addPatient = async () => {
     loading.value = true
+    const token =  "eyJhbGciOiJIUzI1NiIsImtpZCI6ImkwQjZSU0ZwU2hQR1dQV2kiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2dneW9na2liZWJpanl5am5pc2JhLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI0ZjQxOGEzMS1jMWJlLTQwMWItYjdhOC0wMTVkMzlmMmJkNmYiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzMyMDMyOTk3LCJpYXQiOjE3MzIwMjkzOTcsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7fSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTczMjAyOTM5N31dLCJzZXNzaW9uX2lkIjoiMWRiM2EyZDItZWFjZi00OTQwLTk5Y2MtMmI4MTkzN2JmZTJhIiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.pQcOa_IiDblhLGLjiMJGmGDtz8PTd6yuQILKt9pq5mA";
+
 
     try {
         const response = await $fetch('/api/patient/add', {
             method: 'POST',
+            // headers: {
+            //     "Authorization": `Bearer ${token}`,
+            //     "Content-Type": "application/json",
+            // },
             body: {
                 patientData: props.formData
             }

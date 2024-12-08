@@ -5,7 +5,6 @@ import { users } from "./users"
 export const doctors = pgTable("doctors", {
     id: serial("id").primaryKey().notNull(),
     supabaseId: varchar("supabase_id", { length: 100 }).references(() => users.supabaseId).notNull().unique(),
-    contactNumber: integer("contact_number"), 
     licenseNumber: varchar("license_number", { length: 30 }).unique(),
     createdAt: timestamp("created_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
     updatedAt: timestamp("updated_at", { mode: 'string' }),
