@@ -4,9 +4,16 @@ import Aura from '@primevue/themes/aura';
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
-  modules: ['@primevue/nuxt-module', '@nuxtjs/supabase'],
+  modules: [
+    '@primevue/nuxt-module', 
+    '@nuxtjs/supabase', 
+    '@pinia/nuxt'
+  ],
   supabase: {
     redirect: false, 
+  },
+  pinia: {
+    storesDirs: ['./stores/**'],
   },
   // router: {
   //   middleware: ['auth']
