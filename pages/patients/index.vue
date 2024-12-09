@@ -66,7 +66,11 @@
 
 <script setup lang="ts">
 import { nextTick } from 'vue';
+import { useBadgeStore } from '@/stores/notificationStore';
+
 import addPatientForm from '~/components/Forms/patientForm.vue';
+
+const badgeStore = useBadgeStore();
 
 const patients = ref();
 const formAction = ref();
@@ -94,6 +98,11 @@ const session = await supabase.auth.getSession();
 
 
 const fetchAllPatients = async () => {
+    badgeStore.fetchBadgeCount();
+    console.log('Badge Count:')
+    console.log(badgeStore.getBadgeCount('patients'));
+
+
     loading.value = true;
 
     const { data, error } = await useFetch("/api/patient/get-all-patients"); 

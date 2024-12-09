@@ -2,7 +2,7 @@
     <div class="min-h-screen w-screen dark:bg-slate-700 dark:text-zinc-50">
         <div class="flex flex-row justify-between mr-10">
             <div class="text-5xl text-cyan-200 ml-14  mt-3">
-                ENT Clinic
+                ENT Clinic {{  patientBadgeCount }}
             </div>
 
             <ul class="flex flex-row justify-center gap-7 align-top text-2xl">
@@ -26,6 +26,9 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
+import { useBadgeStore } from '@/stores/notificationStore';
+
+const badgeStore = useBadgeStore();
 const router = useRouter();
 
 const supabase = useSupabaseClient();
@@ -37,6 +40,8 @@ const currentPath = computed(() => route.path)
 const session = await supabase.auth.getSession();
 const token = ref();
 token.value = session.data.session?.access_token;
+
+const patientBadgeCount = computed(() => badgeStore.getBadgeCount('patients'));
 
 const headers = [
     { title: 'Patients', path: '/patients' },
