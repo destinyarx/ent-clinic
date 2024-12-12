@@ -1,6 +1,6 @@
 <template>
     <div class="text-center text-3xl">
-        Schedule Page
+        Profile Page
     </div>
 </template>
 

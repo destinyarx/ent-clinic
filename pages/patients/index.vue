@@ -1,8 +1,4 @@
 <template>
-    <div class="flex justify-center text-3xl mt-10">
-        Patients Page
-    </div>
-
     <div class="card flex justify-end mr-12">
         <Button @click="showPatientModal()" type="button" label="Add Patient" icon="pi pi-plus" />
     </div>
@@ -14,7 +10,7 @@
     <!-- {{ session.data.session?.access_token }} -->
 
     <div class="flex justify-center mt-10">
-        <DataTable :value="patients" stripedRows tableStyle="min-width: 50rem">
+        <DataTable :value="patients" stripedRows tableStyle="min-width: 90rem">
             <template #header>
                 <div class="flex flex-wrap items-center justify-between gap-2">
                     <span class="text-xl font-bold">Patients</span>
@@ -48,10 +44,11 @@
                 </template>
             </Column>
 
-            <Column header="Action">
+            <Column header="Action" style="width: 15%;">
                 <template #body="slotProps">
-                    <Button @click="updatePatient(slotProps.data)" label="Update" class="text-sm"/>
-                    <Button @click="deletePatient(slotProps.data.id)" label="Delete" class="text-sm ml-2"/>
+                    <SplitButton label="Actions" @click="save" :model="actions(slotProps.data)" rounded severity="info"/>
+                    <!-- <Button @click="updatePatient(slotProps.data)" label="Update" class="text-sm"/>
+                    <Button @click="deletePatient(slotProps.data.id)" label="Delete" class="text-sm ml-2"/> -->
                 </template>
             </Column>
         </DataTable>
@@ -173,6 +170,30 @@ const closeModal = () => {
     visible.value = false;
     fetchAllPatients();
 }
+
+const actions = (data) => [
+    {
+        label: 'Update',
+        command: () => {
+            console.log('Update');
+            console.log(data);
+            updatePatient(data)
+        }
+    },
+    {
+        label: 'Delete',
+        command: () => {
+            console.log('Delete');
+            deletePatient(data.id)
+        }
+    },
+]
+
+// notification or default function for action
+const save = () => {
+    console.log('Action trigger');
+    // toast.add({ severity: 'success', summary: 'Success', detail: 'Data Saved', life: 3000 });
+};
 
 onMounted(async () => {
     await nextTick();
