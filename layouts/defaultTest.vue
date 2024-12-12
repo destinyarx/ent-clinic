@@ -1,7 +1,7 @@
 <template>
     <div class="min-h-screen w-screen dark:bg-slate-700 dark:text-zinc-50">
         <div class="flex flex-row justify-between mr-10">
-            <div class="text-5xl text-cyan-200 ml-14  mt-3">
+            <div class="text-5xl text-slate-700 ml-14 mt-3 dark:text-cyan-200">
                 ENT Clinic {{  patientBadgeCount }}
             </div>
 

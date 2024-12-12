@@ -1,7 +1,7 @@
 <template>
     <div class="min-h-screen dark:bg-slate-700 dark:text-zinc-50">
         <div class="flex flex-row justify-between mr-10">
-            <NuxtLink to="/landingPage">
+            <NuxtLink to="/">
                 <div class="text-5xl text-cyan-200 ml-14 mt-3">
                     ENT Clinic
                 </div>

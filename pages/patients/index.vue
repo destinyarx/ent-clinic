@@ -65,6 +65,11 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+    layout: 'authenticated-layout',
+})
+
+
 import { nextTick } from 'vue';
 import { useBadgeStore } from '@/stores/notificationStore';
 

@@ -1,6 +1,6 @@
 <template>
-    <div class="text-center text-3xl mt-20">
-        Schedule Page
+    <div class="text-5xl border">
+        Page Main Content
     </div>
 </template>
 
@@ -8,4 +8,6 @@
 definePageMeta({
     layout: 'authenticated-layout',
 })
+
+
 </script>
