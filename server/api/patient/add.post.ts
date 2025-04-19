@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
         const { patientData } = body;
 
 
-        patientsInfo = {
+        const patientsInfo = {
             firstName: patientData.firstName,
             middleName: patientData.middleName,
             lastName: patientData.lastName,

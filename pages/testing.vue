@@ -1,6 +1,6 @@
 <template>
-    <div class="text-5xl border">
-        Page Main Content
+    <div class="text-5xl">
+        Dashboard
     </div>
 </template>
 

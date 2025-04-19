@@ -35,6 +35,6 @@ const supabase = useSupabaseClient();
 const headers = [
     { title: 'Login', path: '/login' },
     { title: 'Sign-up', path: '/signup' },
-    { title: 'Contact us', path: '/contactUs' }
+    { title: 'Contact us', path: '/contact-us' }
 ]
 </script>

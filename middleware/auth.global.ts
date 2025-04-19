@@ -7,7 +7,7 @@ const publicLinks = [
     "/login",
     "/signup",
     "/landingPage",
-    "/contactUs"
+    "/contact-us"
 ];
 
 export default defineNuxtRouteMiddleware((to, from) => {

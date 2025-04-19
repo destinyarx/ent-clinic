@@ -9,8 +9,8 @@
 
     <!-- {{ session.data.session?.access_token }} -->
 
-    <div class="flex justify-center mt-10">
-        <DataTable :value="patients" stripedRows tableStyle="min-width: 90rem">
+    <div class="flex justify-center text-sm mt-10">
+        <DataTable :value="patients" stripedRows tableStyle="min-width: 70rem" size="small">
             <template #header>
                 <div class="flex flex-wrap items-center justify-between gap-2">
                     <span class="text-xl font-bold">Patients</span>
