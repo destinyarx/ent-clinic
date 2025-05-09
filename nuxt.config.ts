@@ -15,6 +15,16 @@ export default defineNuxtConfig({
   pinia: {
     storesDirs: ['./stores/**'],
   },
+  vite: {
+    define: {
+      'process.env': {},
+    },
+    resolve: {
+      alias: {
+        util: 'util/',
+      },
+    },
+  },
   // router: {
   //   middleware: ['auth']
   // },

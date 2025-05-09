@@ -70,7 +70,7 @@ definePageMeta({
 import { nextTick } from 'vue';
 import { useBadgeStore } from '@/stores/notificationStore';
 
-import addPatientForm from '~/components/Forms/patientForm.vue';
+import addPatientForm from '~/components/Forms/PatientForm.vue';
 
 const badgeStore = useBadgeStore();
 

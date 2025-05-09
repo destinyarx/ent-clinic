@@ -63,7 +63,7 @@ const addPatient = async () => {
 
 
     try {
-        const response = await $fetch('/api/patient/add', {
+        const response = await $fetch('/api/patient/details/add', {
             method: 'POST',
             // headers: {
             //     "Authorization": `Bearer ${token}`,
@@ -84,7 +84,7 @@ const addPatient = async () => {
 const updatePatient = async () => {
     loading.value = true;
 
-    await $fetch('/api/patient/update', {
+    await $fetch('/api/patient/details/update', {
         method: 'POST',
         body: {
             patientData: props.formData

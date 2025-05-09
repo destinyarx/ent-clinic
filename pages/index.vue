@@ -1,5 +1,5 @@
-<template>  
-    <div class="grid grid-cols-12 gap-4 grid-nogutter bg-surface-0 dark:bg-surface-950 text-surface-800 dark:text-surface-50">
+<template> 
+    <div class="w-[100vw] grid grid-cols-12 gap-4 grid-nogutter bg-surface-0 dark:bg-surface-950 text-surface-800 dark:text-surface-50">
         <div class="col-span-12 md:col-span-6 p-12 text-center md:text-left flex items-center ">
             <section>
                 <span class="block text-6xl font-bold mb-1">Create the screens </span>
@@ -11,7 +11,7 @@
             </section>
         </div>
         <div class="flex justify-end col-span-12 md:col-span-6 overflow-hidden">
-            <img src="/img/landing-page-image.jpg" alt="Image" class="m-auto h-[90vh]" style="clip-path: polygon(8% 0, 100% 0%, 100% 100%, 0 100%)">
+            <img src="/img/landing-page-image.jpg" alt="Image" class="m-auto h-[90vh] w-full" style="clip-path: polygon(8% 0, 100% 0%, 100% 100%, 0 100%)">
         </div>
     </div>
 </template>
