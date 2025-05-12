@@ -11,12 +11,6 @@ export async function getAllPatients(offset: number, limit: number) {
         .orderBy(desc(patients.createdAt))
         .limit(limit) 
         .offset(offset); 
-
-    // return db
-    //   .select()
-    //   .from(patients)
-    //   .where(isNull(patients.deletedAt))
-    //   .orderBy(desc(patients.createdAt));
 };
 
 export async function getPatientDetails(id: Number) {

@@ -1,5 +1,4 @@
 <template>
-    {{ hasNextPage }}
     <div class="w-full">
         <div class="flex items-center justify-end gap-4">
             <div>Filter By:</div>
@@ -62,10 +61,10 @@
     </div>
 
     <!-- Pagination -->
-    <div class="flex justify-center items-center gap-4 mt-4">
+    <div v-if="!loading" class="flex justify-center items-center gap-4 mt-4">
         <button 
             @click="currentPage--; fetchAllPatients()" 
-            :disabled="currentPage === 0"
+            :disabled="currentPage === 0 || loading"
             class="px-3 py-1 border rounded disabled:opacity-50"
         >
             Prev
@@ -75,13 +74,12 @@
 
         <button 
             @click="currentPage++; fetchAllPatients()" 
-            :disabled="!hasNextPage && loading"
+            :disabled="!hasNextPage || loading"
             class="px-3 py-1 border rounded disabled:opacity-50"
         >
             Next
         </button>
     </div>
-
         
     <Dialog v-model:visible="visible" modal header="Add Patient" :style="{ width: '50rem' }">
         <AddPatientForm 
@@ -98,13 +96,13 @@ definePageMeta({
 })
 
 import { nextTick } from 'vue';
-import { useBadgeStore } from '@/stores/notificationStore';
-import AddPatientForm from '~/components/Forms/PatientForm.vue';
 import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
+import { useBadgeStore } from '@/stores/notificationStore';
+import AddPatientForm from '~/components/Forms/PatientForm.vue';
 
+const visitType = useVisitTypes();
 const router = useRouter();
-
 const badgeStore = useBadgeStore();
 
 type PatientFormType = typeof patientForm.value;
@@ -125,7 +123,7 @@ const firstName = ref('');
 const middleName = ref('');
 const lastName = ref('');
 const address = ref('');
-const loading = ref(false);
+const loading = ref(true);
 const visible = ref(false);
 const database_jwt = ref();
 
@@ -134,7 +132,7 @@ const session = await supabase.auth.getSession();
 
 // fetch pagination
 const patients = ref();
-const itemsPerPage = ref(3);
+const itemsPerPage = ref(10);
 const currentPage = ref(0);
 const hasNextPage = ref(false);
 const fetchAllPatients = async () => {
@@ -147,7 +145,7 @@ const fetchAllPatients = async () => {
         console.log('Patient Badge Count:', patientBadgeCount);
 
         // Fetch patients
-        const offset = (currentPage.value * itemsPerPage.value) + 1; 
+        const offset = (currentPage.value * itemsPerPage.value); 
         const limit = itemsPerPage.value + 1;
         const params = new URLSearchParams({ 
             itemsPerPage: limit.toString(), 
@@ -160,10 +158,15 @@ const fetchAllPatients = async () => {
             throw new Error(error.value.message || "Failed to fetch patients.");
         }
 
+        console.log(itemsPerPage.value + 1);
+        console.log(data.value?.length);
+
         // check if there will be a next page for table
-        if (data.value?.length === itemsPerPage.value - 1) {
+        if (data.value?.length === itemsPerPage.value + 1) {
             hasNextPage.value = true;
             data.value.pop();
+        } else{
+            hasNextPage.value = false;
         }
 
         patients.value = data.value ?? [];

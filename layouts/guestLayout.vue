@@ -16,9 +16,9 @@
 
             <ul class="flex flex-row justify-center gap-8 align-top text-md">
                 <li v-for="header in headers" class="my-3">
-                    <NuxtLink :to="header['path']">
-                        <span class="text-2xl" :class="currentPath === header['path'] ? 'text-cyan-400' : ''">
-                            {{ header['title'] }}
+                    <NuxtLink :to="header.path">
+                        <span class="text-2xl" :class="currentPath === header.path ? 'text-cyan-400' : ''">
+                            {{ header.title }} 
                         </span>
                     </NuxtLink>
                 </li>

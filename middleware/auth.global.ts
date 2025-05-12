@@ -1,10 +1,9 @@
 import { defineNuxtRouteMiddleware, navigateTo } from '#app'
 
-
 const publicLinks = [
     "/",
-    "/login",
-    "/signup",
+    "/auth/login",
+    "/auth/signup",
     "/landingPage",
     "/contact-us"
 ];
@@ -14,6 +13,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
     // If there is no authenticated user and we are not on the login, signup, or root page
     if (!user.value && !publicLinks.includes(to.path)) {
-        return navigateTo('/login')
+        return navigateTo('/auth/login')
     }
 })
