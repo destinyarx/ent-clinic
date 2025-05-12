@@ -33,8 +33,8 @@ This is a full-stack Nuxt 3 project using:
 ### 1. Clone the Repo
 
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/destinyarx/ent-clinic.git
+cd your-folder-name
 ```
 
 ### 2. Install Dependencies
