@@ -1,4 +1,56 @@
-# 🩺 Nuxt 3 + Drizzle + Supabase Starter (EMR Project)
+# 🩺 ENTCare — An EMR System for ENT Clinics
+
+![VS Code](https://img.shields.io/badge/built%20with-VS%20Code-007ACC?style=flat-square&logo=visualstudiocode&logoColor=white)
+![Medical](https://img.shields.io/badge/focus-ENT%20Clinic%20EMR-lightblue?style=flat-square&logo=medrt)
+
+### 🧠 Overview
+
+**ENTCare** is a specialized Electronic Medical Record (EMR) system tailored for **Ear, Nose, and Throat (ENT)** clinics. Built with a focus on simplicity, security, and speed, it helps clinicians manage patient data, streamline consultations, and ensure continuity of care — all in one modern interface.
+
+---
+
+### 🏥 What It Does
+
+- 📋 Organizes patient visits by type (appointment, emergency, surgical case, etc.)
+- 🦻 Focused modules for ENT cases: hearing assessments, throat exams, sinus records
+- 📅 Tracks appointments, follow-ups, and referrals efficiently
+- 👨‍⚕️ Built to support real clinical workflows in small to mid-size ENT practices
+- 🔐 Includes secure login for medical personnel using Supabase Auth
+
+---
+
+### 💡 Why ENTCare?
+
+Most generic EMR systems are bloated with unnecessary features. **ENTCare** was designed to be:
+
+- ✅ Fast & intuitive
+- ✅ Optimized for ENT workflows
+- ✅ Privacy-focused
+- ✅ Easy to deploy and maintain
+
+---
+
+### 🚑 Who Is It For?
+
+This system is ideal for:
+
+- ENT specialists in private practice
+- Small ENT clinics looking to digitize records
+- Medical students or interns building EMR prototypes
+- Clinics in resource-limited settings needing a lightweight solution
+
+---
+
+### 📌 Status
+
+ENTCare is currently under active development and will soon support advanced reporting, billing integration, and patient self-registration.
+
+---
+
+
+
+
+### Nuxt 3 + Drizzle + Supabase Starter (Project Tech Stack)
 
 This is a full-stack Nuxt 3 project using:
 
@@ -77,7 +129,7 @@ yarn install
    npx drizzle-kit push
 ```
 
----------------------------------------------------------------------------------------------------------------------------------------------
+---
 
 
 # Nuxt 3 Minimal Starter
