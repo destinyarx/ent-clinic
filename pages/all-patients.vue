@@ -7,7 +7,7 @@
             <Button type="button" label="In Queue" severity="success"/>
             <Button type="button" label="Finished" severity="help"/>
         </div>
-        <div class="w-full flex flex-wrap justify-center text-sm mt-10 overflow-x-auto">
+        <div class="w-full flex flex-wrap justify-center text-sm mt-5 overflow-x-auto">
             <DataTable 
                 :value="patients" 
                 @row-click="onRowClick" 
@@ -67,7 +67,8 @@
             :disabled="currentPage === 0 || loading"
             class="px-3 py-1 border rounded disabled:opacity-50"
         >
-            Prev
+            <i class="pi pi-angle-left"></i>
+            Previous
         </button>
 
         <span>Page {{ currentPage + 1 }}</span>
@@ -78,6 +79,7 @@
             class="px-3 py-1 border rounded disabled:opacity-50"
         >
             Next
+            <i class="pi pi-angle-right"></i>
         </button>
     </div>
         
