@@ -83,11 +83,11 @@
         </button>
     </div>
         
-    <Dialog v-model:visible="visible" modal header="Add Patient" :style="{ width: '50rem' }">
-        <AddPatientForm 
-            :action="formAction" 
-            :formData="patientForm"
+    <Dialog v-model:visible="visible" modal header="Add Patient" :style="{ width: '60rem' }">
+        <PatientForm 
             @processDone="resetPatientForm(), fetchAllPatients()"
+            :action="formAction" 
+            :form="patientForm"
         />
     </Dialog>
 </template>
@@ -101,7 +101,7 @@ import { nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
 import { useBadgeStore } from '@/stores/notificationStore';
-import AddPatientForm from '~/components/Forms/PatientForm.vue';
+import PatientForm from '~/components/Forms/PatientForm.vue';
 
 const visitType = useVisitTypes();
 const router = useRouter();
@@ -119,6 +119,7 @@ const patientForm = ref({
     gender: null,
     contactNumber: null,
     birthdate: null,
+    allergies: []
 });
 
 const firstName = ref('');
@@ -190,6 +191,7 @@ const updatePatient = (data: Partial<PatientFormType>) => {
     patientForm.value.gender = data.gender ?? null;
     patientForm.value.contactNumber = data.contactNumber ?? null;
     patientForm.value.birthdate = data.birthdate ?? null;
+    patientForm.value.allergies = data.allergies ?? [];
     visible.value = true;
 }
 

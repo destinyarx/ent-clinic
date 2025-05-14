@@ -12,7 +12,7 @@ export const patients = pgTable("patients", {
     birthdate: date().notNull(),
     address: varchar(),
     contactNumber: bigint("contact_number", { mode: 'number' }),
-    allergies: varchar(),
+    allergies: text('allergies').array(),
     occupation: varchar(),
     admissionId: bigint("admission_id", { mode: 'number' }).references(() => admissions.id),
     createdAt: timestamp("created_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),

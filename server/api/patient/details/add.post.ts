@@ -15,7 +15,8 @@ export default defineEventHandler(async (event) => {
             address: patientData.address,
             birthdate: patientData.birthdate,
             gender: patientData.gender,
-            contactNumber: patientData.contactNumber
+            contactNumber: patientData.contactNumber,
+            allergies: patientData.allergies
         }
 
         const response = await addPatient(patientsInfo);

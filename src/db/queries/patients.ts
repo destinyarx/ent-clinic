@@ -47,6 +47,7 @@ export async function updatePatient(patientsInfo: InsertPatient) {
             birthdate: patientsInfo.birthdate,
             contactNumber: patientsInfo.contactNumber,
             address: patientsInfo.address,            
+            allergies: patientsInfo.allergies,            
             updatedAt: sql`NOW()`,
         })
         .where(eq(patients.id, patientsInfo.id));
