@@ -40,7 +40,7 @@
                             </div>
 
                             <div class="flex justify-center">
-                                <Button @click="login" label="Signup" severity="success" class="mt-5 mb-2 w-24" rounded/>
+                                <Button @click="signup" label="Request to Register" severity="success" class="mt-5 mb-2" rounded/>
                             </div>
 
                             <div v-if="loginError " class="text-sm text-red-400 text-center">
@@ -63,7 +63,7 @@ definePageMeta({
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
-const loginError = ref('');
+const signupError = ref('');
 
 const signup = async () => {
     

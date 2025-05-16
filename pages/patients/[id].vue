@@ -22,7 +22,7 @@
                 Allergies:
             </span>
 
-            <template v-if="patient?.data?.allergies" >
+            <template v-if="patient?.data?.allergies.length" >
                 <Badge v-for="(item, index) in patient.data.allergies" class="bg-neutral-300 mr-1">
                     {{ item }}
                 </Badge>

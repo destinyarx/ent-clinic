@@ -1,73 +1,117 @@
 <template>
     <div class="flex flex-col text-lg">
         <div class="flex flex-row mb-8">
-            <div class="w-1/3 mr-5">
-                <InputText v-model="props.form.firstName" variant="outlined" placeholder="First Name"  class="w-full"/>
+            <div class="flex flex-row flex-wrap w-1/3 mr-5">
+                <label for="contact" class="text-sm font-light mb-1">
+                    First Name
+                </label>
+                <InputText v-model="props.form.firstName" variant="filled" class="w-full"/>
             </div>
 
-            <div class="w-1/3 mr-5">
-                <InputText v-model="props.form.middleName" variant="outlined" placeholder="Middle Name" class="w-full"/>
+            <div class="flex flex-row flex-wrap w-1/3 mr-5">
+                <label for="contact" class="text-sm font-light mb-1">
+                    Middle Name
+                </label>
+                <InputText v-model="props.form.middleName" variant="filled" class="w-full"/>
             </div>
 
-            <div class="w-1/3">
-                <InputText v-model="props.form.lastName" variant="outlined" placeholder="Last Name" class="w-full"/>
+            <div class="flex flex-row flex-wrap w-1/3">
+                <label for="contact" class="text-sm font-light mb-1">
+                    Last Name
+                </label>
+                <InputText v-model="props.form.lastName" variant="filled" class="w-full"/>
             </div>
         </div>
 
         <div class="flex flex-row justify-between mb-8">
-            <div class="w-1/3 mr-5">
+            <div class="flex flex-row flex-wrap w-1/3 mr-5">
+                <label for="gender" class="text-sm font-light mb-1">
+                    Gender
+                </label>
                 <Select 
                     v-model="props.form.gender" 
                     :options="genderOptions" 
                     optionLabel="name" 
                     optionValue="code" 
                     placeholder="Gender" 
+                    name="gender"
                     class="w-full text-base"
                 />
             </div>
 
-            <div class="w-1/3 mr-5">
+            <div class="flex flex-row flex-wrap w-1/3 mr-5">
+                <label for="birthdate" class="text-sm font-light mb-1">
+                    Birthdate
+                </label>
+
                 <DatePicker v-model="props.form.birthdate" showIcon class="w-full text-base"/>
             </div>
 
-            <div class="w-1/3">
-                <InputNumber 
+            <div class="flex flex-row flex-wrap w-1/3">
+                <label for="contact" class="text-sm font-light mb-1">
+                    Contact Number
+                </label>
+                <InputText 
                     v-model="props.form.contactNumber" 
-                    :useGrouping="false" 
                     variant="outlined" 
-                    placeholder="Contact Number" 
+                    placeholder="e.g., 09123456789"                    
                     class="w-full" 
                 />
             </div>
         </div>
 
-        <div class="w-full mb-8">
-            <InputText 
-                v-model="props.form.address" 
-                variant="outlined" 
-                placeholder="Address" 
-                class="w-full"
-            />
+        <div class="mb-8">
+            <label for="contact" class="text-sm font-light mb-1">
+                Address
+            </label>
+            <InputText v-model="props.form.address" variant="filled" class="w-full"/>
         </div>
 
-        <Message severity="secondary" size="small" variant="simple" class="-mb-2">
-            <p class="text-xs italic mb-2">
-                Type an allergy and press <span class="font-semibold">Enter</span> to add it. Example: <em>Peanuts</em>, <em>Dust</em>, <em>Seafood</em>, <em>Penicillin</em>.
-            </p>
+        <Message severity="secondary" size="small" variant="simple" class="-mb-1">
+            <span>
+                Allergy
+            </span>
+            <span class="text-xs italic mb-2">
+                <span class="text-yellow-400 ml-2">*</span>
+                Type or select an allergy and press <span class="font-semibold">Enter</span> to add it.
+                <span class="text-yellow-400">*</span>  
+            </span>
         </Message>
         
         <div class="flex flex-col flex-wrap gap-2 w-full mb-8">
-            <AutoComplete
-                v-model="allergy"
-                @complete="searchAllergy"
-                @keydown.enter.prevent="addAllergy"
-                :suggestions="filteredAllergies"
-                placeholder="Enter or select an allergy"
-                class="w-full sm:w-30rem"
-                dropdown
-            />
+            <div class="flex flex-row gap-2 w-full">
+                <AutoComplete
+                    v-model="allergy"
+                    @complete="searchAllergy"
+                    @keydown.enter.prevent="addAllergy"
+                    :suggestions="filteredAllergies"
+                    placeholder="Enter or select an allergy"
+                    class="w-[55vw]"
+                    dropdown
+                />
 
-            <div class="flex flex-wrap gap-2 w-full text-xs">
+                <InputText 
+                    v-model="props.form.occupation" 
+                    variant="outlined" 
+                    placeholder="Occupation" 
+                    class="w-[45vw]"
+                />
+            </div>
+
+            <div class="flex flex-wrap gap-2 items-center w-full text-xs">
+                <span v-if="props.form.allergies.length">
+                    <Badge class="bg-neutral-400 rounded-full">
+                        {{ props.form.allergies.length === 1 ? 'Allergy' : 'Allergies'  }}
+
+                        <Badge 
+                            :value="props.form.allergies.length" 
+                            size="small"
+                            class="rounded-full bg-blue-300 ml-1"
+                        >
+                        </Badge>
+                    </Badge>
+                </span>
+
                 <Chip
                     v-for="item in props.form.allergies"
                     :key="item"
@@ -77,7 +121,6 @@
                 />
             </div>
         </div>
-
 
         <div class="flex justify-center">
             <Button @click="props.action === 'insert' ? addPatient() : updatePatient()" severity="success" :label="props.action === 'insert' ? 'Add Patient' : 'Update Patient'" class="mt-5" />
@@ -96,6 +139,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits(['processDone']);
+const { allergies } = useConstants();
 
 const loading = ref(false);
 const genderOptions = ref([
@@ -107,14 +151,12 @@ const genderOptions = ref([
 // for managing allergies state
 const allergy = ref('');
 const filteredAllergies = ref<string[]>([]);
-const allAllergies = ref<string[]>([               
-  'Peanuts', 'Shellfish', 'Dust', 'Pollen', 'Penicillin', 'Eggs', 'Milk', 'Soy', 'Wheat', 'Latex', 'Mold', 'Bee stings'
-]);
+
 
 // Search matching suggestions
 const searchAllergy = (event: { query: string }) => {
   const query = event.query.toLowerCase()
-  filteredAllergies.value = allAllergies.value.filter(item =>
+  filteredAllergies.value = allergies().filter(item =>
     item.toLowerCase().includes(query)
   )
 }
@@ -148,7 +190,7 @@ const addPatient = async () => {
                 patientData: props.form
             }
         })  
-        emit('processDone');
+        emit('processDone', 'add');
     } catch (error) {
         console.log(error)
     }
@@ -170,7 +212,7 @@ const updatePatient = async () => {
         console.log(error)
     })
     
-    emit('processDone');
+    emit('processDone', 'update');
     loading.value = false;
 }
 </script>

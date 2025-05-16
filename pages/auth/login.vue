@@ -45,9 +45,14 @@ definePageMeta({
 });
 
 import { useRouter } from 'vue-router';
-const router = useRouter();
+import { useUserStore } from '@/stores/authStore';
 
-const supabase = useSupabaseClient()
+const router = useRouter();
+const supabase = useSupabaseClient();
+
+const { errorNotification } = useNotification();
+const userStore = useUserStore();
+
 const username = ref('')
 const password = ref('')
 const loading = ref(false)
@@ -66,12 +71,16 @@ const login = async () => {
         password: password.value,
     })
 
-    if (error) loginError.value = true;
+    if (error) {
+        errorNotification('Login Failed.');
+        loginError.value = true;
 
-    if (data && !error) router.push('/patients');
+        return;
+    } 
 
-    console.log(error)
-    loading.value = false;
+    // proceed to login
+    userStore.setUserInfo();
+    router.push('/patients');
 }
 
 </script>
