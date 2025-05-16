@@ -1,4 +1,4 @@
-import { pgTable, serial, text, date, timestamp, foreignKey, bigint } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, date, timestamp, bigint } from "drizzle-orm/pg-core";
 import { patients } from "./patients";
 import { sql } from "drizzle-orm"
 

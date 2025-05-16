@@ -7,7 +7,8 @@ export default defineNuxtConfig({
   modules: [
     '@primevue/nuxt-module', 
     '@nuxtjs/supabase', 
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    'pinia-plugin-persistedstate/nuxt'
   ],
   supabase: {
     redirect: false, 

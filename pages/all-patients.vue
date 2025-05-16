@@ -1,4 +1,5 @@
 <template>
+    {{  user.profile }}
     <div class="w-full">
         <div class="flex items-center justify-end gap-4">
             <div>Filter By:</div>
@@ -53,7 +54,7 @@
     
                 <Column header="Action" style="width: 15%;">
                     <template #body="slotProps">
-                        <SplitButton label="Actions" @click="save" :model="actions(slotProps.data)" rounded severity="info"/>
+                        <SplitButton label="Actions" :model="actions(slotProps.data)" rounded severity="info"/>
                     </template>
                 </Column>
             </DataTable>
@@ -85,7 +86,7 @@
         
     <Dialog v-model:visible="visible" modal header="Add Patient" :style="{ width: '60rem' }">
         <PatientForm 
-            @processDone="resetPatientForm(), fetchAllPatients()"
+            @processDone="handleSuccess"
             :action="formAction" 
             :form="patientForm"
         />
@@ -99,11 +100,15 @@ definePageMeta({
 
 import { nextTick } from 'vue';
 import { useRouter } from 'vue-router';
-import Swal from 'sweetalert2';
+import { useUserStore } from '@/stores/authStore';
 import { useBadgeStore } from '@/stores/notificationStore';
 import PatientForm from '~/components/Forms/PatientForm.vue';
+import Swal from 'sweetalert2';
 
-const visitType = useVisitTypes();
+const user = useUserStore();
+
+const { success } = useNotification()
+const { visitTypes } = useConstants();
 const router = useRouter();
 const badgeStore = useBadgeStore();
 
@@ -119,7 +124,8 @@ const patientForm = ref({
     gender: null,
     contactNumber: null,
     birthdate: null,
-    allergies: []
+    allergies: [],
+    occupation: null
 });
 
 const firstName = ref('');
@@ -138,6 +144,14 @@ const patients = ref();
 const itemsPerPage = ref(10);
 const currentPage = ref(0);
 const hasNextPage = ref(false);
+
+const onRowClick = (event: any) => {
+  const rowData = event.data;
+  
+  console.log('Row clicked:', rowData);
+  router.push(`/patients/${rowData.id}`);
+}
+
 const fetchAllPatients = async () => {
     try {
         loading.value = true;
@@ -161,9 +175,6 @@ const fetchAllPatients = async () => {
             throw new Error(error.value.message || "Failed to fetch patients.");
         }
 
-        console.log(itemsPerPage.value + 1);
-        console.log(data.value?.length);
-
         // check if there will be a next page for table
         if (data.value?.length === itemsPerPage.value + 1) {
             hasNextPage.value = true;
@@ -182,6 +193,7 @@ const fetchAllPatients = async () => {
 
 
 const updatePatient = (data: Partial<PatientFormType>) => {
+    console.log(data)
     formAction.value = 'update';
     patientForm.value.id = data.id ?? null;
     patientForm.value.firstName = data.firstName ?? null;
@@ -192,6 +204,7 @@ const updatePatient = (data: Partial<PatientFormType>) => {
     patientForm.value.contactNumber = data.contactNumber ?? null;
     patientForm.value.birthdate = data.birthdate ?? null;
     patientForm.value.allergies = data.allergies ?? [];
+    patientForm.value.occupation = data.occupation ?? null;
     visible.value = true;
 }
 
@@ -205,6 +218,8 @@ const resetPatientForm = () => {
     patientForm.value.gender = null;
     patientForm.value.contactNumber = null;
     patientForm.value.birthdate = null;
+    patientForm.value.occupation = null;
+    patientForm.value.allergies = [];
     visible.value = false;
 }
 
@@ -218,8 +233,7 @@ const deletePatient = async (id: Number) => {
         fetchAllPatients();
         
     } catch (error) {
-        console.log(error);
-        
+        error('Unexpected error has occured.');
     }
     
 }
@@ -227,11 +241,6 @@ const deletePatient = async (id: Number) => {
 const showPatientModal = () => {
     formAction.value = "insert";
     visible.value = true;
-    fetchAllPatients();
-}
-
-const closeModal = () => {
-    visible.value = false;
     fetchAllPatients();
 }
 
@@ -253,26 +262,19 @@ const actions = (data: Partial<PatientFormType>) => [
     },
 ]
 
-// notification or default function for action
-const save = () => {
-    Swal.fire({
-        title: 'Success!',
-        text: 'Your data has been saved successfully.',
-        icon: 'success',
-        confirmButtonText: 'OK',
-    });
-};
+const handleSuccess = (action: string) => {
+    const message = action === 'add' ? 'Patient has been added.' : 'Patient has been updated.';
+    success(message);
 
-const onRowClick = (event: any) => {
-  const rowData = event.data;
-  
-  console.log('Row clicked:', rowData);
-  router.push(`/patients/${rowData.id}`);
+    resetPatientForm();
+    fetchAllPatients();
 }
 
 onMounted(async () => {
     await nextTick();
     await fetchAllPatients();
+
+    console.log(user.profile);
 });
 </script>
 

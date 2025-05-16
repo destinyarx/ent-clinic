@@ -37,6 +37,8 @@ export async function deletePatient(id: Number) {
 };
 
 export async function updatePatient(patientsInfo: InsertPatient) {
+    console.log(patientsInfo)
+    
     return db
         .update(patients)
         .set({ 
@@ -48,6 +50,7 @@ export async function updatePatient(patientsInfo: InsertPatient) {
             contactNumber: patientsInfo.contactNumber,
             address: patientsInfo.address,            
             allergies: patientsInfo.allergies,            
+            occupation: patientsInfo.occupation,            
             updatedAt: sql`NOW()`,
         })
         .where(eq(patients.id, patientsInfo.id));

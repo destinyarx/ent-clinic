@@ -15,6 +15,8 @@ export default defineEventHandler(async (event) => {
             lastName: patientData.lastName,
             address: patientData.address,
             birthdate: patientData.birthdate,
+            occupation: patientData.occupation,
+            allergies: patientData.allergies,
             gender: patientData.gender,
             contactNumber: patientData.contactNumber
         }
