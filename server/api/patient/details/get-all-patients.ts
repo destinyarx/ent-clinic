@@ -12,7 +12,6 @@ export default defineEventHandler(async (event) => {
     //     data: { limit, offset },
     // });
     
-
     return await getAllPatients(offset, limit);
 })
 
