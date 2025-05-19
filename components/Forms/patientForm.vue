@@ -79,7 +79,7 @@
         </Message>
         
         <div class="flex flex-col flex-wrap gap-2 w-full mb-8">
-            <div class="flex flex-row gap-2 w-full">
+            <div class="flex flex-row gap-2 w-full mb-2">
                 <AutoComplete
                     v-model="allergy"
                     @complete="searchAllergy"
@@ -111,6 +111,7 @@
                         </Badge>
                     </Badge>
                 </span>
+
 
                 <Chip
                     v-for="item in props.form.allergies"
@@ -202,10 +203,8 @@ const updatePatient = async () => {
     loading.value = true;
 
     await $fetch('/api/patient/details/update', {
-        method: 'POST',
-        body: {
-            patientData: props.form
-        }
+        method: 'PUT',
+        body: { patientData: props.form }
     }).then(response => {
         console.log(response.data)
     }).catch(error => {

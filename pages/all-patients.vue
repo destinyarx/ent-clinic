@@ -1,5 +1,4 @@
 <template>
-    {{  user.profile }}
     <div class="w-full">
         <div class="flex items-center justify-end gap-4">
             <div>Filter By:</div>
@@ -84,12 +83,24 @@
         </button>
     </div>
         
-    <Dialog v-model:visible="visible" modal header="Add Patient" :style="{ width: '60rem' }">
+    <Dialog 
+        v-model:visible="visible" 
+        :header="formAction === 'update' ? 'Update Patient' : 'Add Patient'" 
+        :style="{ width: '60rem' }" modal>
+
         <PatientForm 
             @processDone="handleSuccess"
             :action="formAction" 
             :form="patientForm"
         />
+    </Dialog>
+
+    <Dialog 
+        v-model:visible="showQueueModal" 
+        header="Add to Queue" 
+        :style="{ width: '30rem' }" modal>
+
+       <QueueForm :form="queueForm"/>
     </Dialog>
 </template>
 
@@ -103,7 +114,7 @@ import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/authStore';
 import { useBadgeStore } from '@/stores/notificationStore';
 import PatientForm from '~/components/Forms/PatientForm.vue';
-import Swal from 'sweetalert2';
+import QueueForm from '~/components/Forms/QueueForm.vue';
 
 const user = useUserStore();
 
@@ -113,6 +124,14 @@ const router = useRouter();
 const badgeStore = useBadgeStore();
 
 type PatientFormType = typeof patientForm.value;
+
+interface QueueType {
+  id: number | null;
+  visitType: string | null;
+  reason: string | null;
+  assignedTo: number | null;
+  companion: string | null;
+}
 
 const formAction = ref();
 const patientForm = ref({
@@ -125,16 +144,13 @@ const patientForm = ref({
     contactNumber: null,
     birthdate: null,
     allergies: [],
-    occupation: null
+    occupation: null,
+    queue: false
 });
 
-const firstName = ref('');
-const middleName = ref('');
-const lastName = ref('');
-const address = ref('');
+
 const loading = ref(true);
 const visible = ref(false);
-const database_jwt = ref();
 
 const supabase = useSupabaseClient()
 const session = await supabase.auth.getSession();
@@ -192,8 +208,7 @@ const fetchAllPatients = async () => {
 };
 
 
-const updatePatient = (data: Partial<PatientFormType>) => {
-    console.log(data)
+const handleUpdate = (data: Partial<PatientFormType>) => {
     formAction.value = 'update';
     patientForm.value.id = data.id ?? null;
     patientForm.value.firstName = data.firstName ?? null;
@@ -205,6 +220,7 @@ const updatePatient = (data: Partial<PatientFormType>) => {
     patientForm.value.birthdate = data.birthdate ?? null;
     patientForm.value.allergies = data.allergies ?? [];
     patientForm.value.occupation = data.occupation ?? null;
+    patientForm.value.queue = data.queue ?? false;
     visible.value = true;
 }
 
@@ -223,19 +239,14 @@ const resetPatientForm = () => {
     visible.value = false;
 }
 
-const deletePatient = async (id: Number) => {
+const handleDelete = async (id: number) => {
     try {
-        await $fetch("/api/patient/details/delete", {
-            method: 'GET',
-            body: { id: id }
-        }); 
+        await $fetch("/api/patient/details/delete", { body: { id: id } }); 
 
         fetchAllPatients();
-        
     } catch (error) {
         error('Unexpected error has occured.');
     }
-    
 }
 
 const showPatientModal = () => {
@@ -244,23 +255,30 @@ const showPatientModal = () => {
     fetchAllPatients();
 }
 
-const actions = (data: Partial<PatientFormType>) => [
+const  actions = (data: Partial<PatientFormType>) => {
+  const baseActions = [
     {
-        label: 'Update',
-        command: () => {
-            console.log('Update');
-            console.log(data);
-            updatePatient(data)
-        }
+      label: 'Update',
+      icon: 'pi pi-pencil',
+      command: () => handleUpdate(data),
     },
     {
-        label: 'Delete',
-        command: () => {
-            console.log('Delete');
-            deletePatient(data.id)
-        }
+      label: 'Delete',
+      icon: 'pi pi-trash',
+      command: () => handleDelete(data.id),
     },
-]
+  ];
+
+  if (!data.queue) {
+    baseActions.unshift({
+      label: 'Add to Queue',
+      icon: 'pi pi-plus',
+      command: () => handleAddToQueue(data.id),
+    });
+  }
+
+  return baseActions;
+}
 
 const handleSuccess = (action: string) => {
     const message = action === 'add' ? 'Patient has been added.' : 'Patient has been updated.';
@@ -270,11 +288,35 @@ const handleSuccess = (action: string) => {
     fetchAllPatients();
 }
 
+// for patient queue
+const visitType = ref();
+const showQueueModal = ref(false);
+
+const queueForm = ref<QueueType>({
+    id: null,
+    visitType: null,
+    reason: null,
+    assignedTo: null,
+    companion: null
+})
+
+const resetQueueData = () => {
+    queueForm.value.id = null;
+    queueForm.value.visitType = null;
+    queueForm.value.reason = null;
+    queueForm.value.assignedTo = null;
+    queueForm.value.companion = null;
+}
+
+const handleAddToQueue = (id: number) => {
+    queueForm.value.id = id;
+
+    showQueueModal.value = true;
+}
+
 onMounted(async () => {
     await nextTick();
     await fetchAllPatients();
-
-    console.log(user.profile);
 });
 </script>
 

@@ -3,7 +3,7 @@
         <div class="flex flex-row justify-between w-full mr-10">
             <div class="flex flex-row justify-start items-center gap-5 mt-2">
                 <NuxtLink to="/">
-                    <img src="/img/entcare.png" alt="avatar" class="rounded-full object-cover w-24 h-24 bg-sky-200 ml-10"/>
+                    <img src="/img/entcare.png" alt="avatar" class="rounded-full object-cover w-20 h-20 bg-sky-200 ml-10"/>
                 </NuxtLink>
     
                 <NuxtLink to="/">

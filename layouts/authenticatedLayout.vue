@@ -26,7 +26,7 @@
                     </template>
                 </div>
 
-                <NuxtLink to="/testing">
+                <NuxtLink to="/dashboard">
                     <div @click="setCurrentTab('dashboard')" class="flex items-center space-x-4 rounded-full  mb-3 hover:outline hover:outline-2 hover:outline-blue-300" :class="currentTab === 'dashboard' ? 'bg-sky-300 text-zinc-50' : 'bg-gray-200 dark:bg-slate-400'">
                         <!-- SVG Icon -->
                         <template v-if="currentTab === 'dashboard'">

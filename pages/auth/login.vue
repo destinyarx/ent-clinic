@@ -1,5 +1,5 @@
 <template>
-    <div class="flex min-h-[95vh] bg-slate-700">
+    <div class="flex min-h-[85vh] bg-slate-700">
         <div class="flex justify-center w-1/2">
             <div class="flex justify-center items-center">
                 <img src="/img/login-cover-image.jpg" alt="Login Page Cover Picture" class="h-[80vh] w-[35vw] rounded-lg block" />
