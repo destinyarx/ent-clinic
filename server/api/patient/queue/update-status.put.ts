@@ -1,4 +1,4 @@
-import { updateStatus } from "~/src/db/queries/queue";
+import { updateQueueStatus } from "~/src/db/queries/patients";
 
 export default defineEventHandler(async (event) => {
     let data = null;
@@ -7,7 +7,12 @@ export default defineEventHandler(async (event) => {
         const body = await readBody(event);
         data = body.data;
 
-        updateStatus(data.id, data.type);
+        await updateQueueStatus(data.id, data.type);
+
+        return {
+            success: true,
+            data: 'Queue status successfully updated.',
+        }
     } catch (error) {
         return {
             success: false,

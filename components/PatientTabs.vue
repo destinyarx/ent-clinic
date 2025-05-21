@@ -18,6 +18,7 @@
         </button>
       </nav>
   
+      <!-- Content here -->
       <div class="mt-4">
         <p>Current tab: <strong>{{ activeTab }}</strong></p>
       </div>

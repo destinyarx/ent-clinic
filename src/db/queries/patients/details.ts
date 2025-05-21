@@ -20,7 +20,7 @@ export async function addPatient(patientsInfo: InsertPatient) {
 export async function updateQueueStatus(id: number, status: boolean) {
     return await db
         .update(patients)
-        .set({ boolean: status })
+        .set({ queue: status })
         .where(eq(patients.id, id));
 }
 

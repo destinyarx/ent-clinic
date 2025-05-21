@@ -11,3 +11,8 @@
 body {
     font-family: 'Poppins', sans-serif;
 }
+
+.my-swal-container {
+    z-index: 99999 !important;
+}
+  

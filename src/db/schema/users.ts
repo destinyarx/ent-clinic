@@ -12,7 +12,10 @@ export const users = pgTable(
         lastName: varchar("last_name", { length: 30 }),
         supabaseId: varchar("supabase_id", { length: 100 }).notNull().unique(),
         contactNumber: bigint("contact_number", { mode: 'number' }),
+        createdAt: timestamp("created_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
+        updatedAt: timestamp("updated_at", { mode: 'string' }),
+        deletedAt: timestamp("deleted_at", { mode: 'string' }),
     }
 );
 
-export type InsertUser = typeof users.$inferInsert;
+export type UserType = typeof users.$inferInsert;

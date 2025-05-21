@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col w-full min-screen">
-        <div class="flex flex-row items-center border-b border-gray-300 pb-2 mb-4 ">
+        <div class="flex flex-row items-center pb-2 mb-4 ">
             <div class="mr-2">
                 <Avatar icon="pi pi-user" class="mr-2" size="xlarge" style="background-color: #ece9fc; color: #2a1261" shape="circle" />
             </div>

@@ -29,11 +29,11 @@ export async function destroy(id: number) {
         .where(eq(queue.id, id));
 }
 
-export async function updateStatus(id: number, type: string) {
+export async function updateQueueStatus(id: number, type: string) {
     return await db
         .update(queue)
         .set({ 
-            type: type,
+            visitType: type,
             updatedAt: sql`NOW()`           
         })
         .where(eq(queue.id, id));
