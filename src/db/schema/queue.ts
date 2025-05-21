@@ -9,6 +9,7 @@ export const queue = pgTable('queue', {
     visitType: varchar('visit_type', { length: 50 }), 
     doctorId: smallint('doctor_id').references(() => users.id).notNull(),
     reason: varchar({ length: 100 }), 
+    companion: varchar({ length: 50 }), 
     createdAt: timestamp('created_at', { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
     updatedAt: timestamp('updated_at', { mode: 'string' }),
     deletedAt: timestamp('deleted_at', { mode: 'string' }),

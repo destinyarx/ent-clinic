@@ -22,6 +22,12 @@
                         </div>
                     </div>
                 </template>
+
+                <template #empty> 
+                    <div class="text-center text-zinc-100 opacity-70 py-2">
+                        No patient found.
+                    </div> 
+                </template>
     
                 <Column header="Name">
                     <template #body="slotProps">
@@ -56,31 +62,33 @@
                         <SplitButton label="Actions" :model="actions(slotProps.data)" rounded severity="info"/>
                     </template>
                 </Column>
+
+                <!-- Pagination -->
+                <template #footer>
+                    <div v-if="!loading" class="flex justify-center items-center gap-4 mt-4">
+                        <button 
+                            @click="currentPage--; fetchAllPatients()" 
+                            :disabled="currentPage === 0 || loading"
+                            class="px-3 py-1 border rounded disabled:opacity-50"
+                        >
+                            <i class="pi pi-angle-left"></i>
+                            Previous
+                        </button>
+
+                        <span>Page {{ currentPage + 1 }}</span>
+
+                        <button 
+                            @click="currentPage++; fetchAllPatients()" 
+                            :disabled="!hasNextPage || loading"
+                            class="px-3 py-1 border rounded disabled:opacity-50"
+                        >
+                            Next
+                            <i class="pi pi-angle-right"></i>
+                        </button>
+                    </div>
+                </template>
             </DataTable>
         </div>
-    </div>
-
-    <!-- Pagination -->
-    <div v-if="!loading" class="flex justify-center items-center gap-4 mt-4">
-        <button 
-            @click="currentPage--; fetchAllPatients()" 
-            :disabled="currentPage === 0 || loading"
-            class="px-3 py-1 border rounded disabled:opacity-50"
-        >
-            <i class="pi pi-angle-left"></i>
-            Previous
-        </button>
-
-        <span>Page {{ currentPage + 1 }}</span>
-
-        <button 
-            @click="currentPage++; fetchAllPatients()" 
-            :disabled="!hasNextPage || loading"
-            class="px-3 py-1 border rounded disabled:opacity-50"
-        >
-            Next
-            <i class="pi pi-angle-right"></i>
-        </button>
     </div>
         
     <Dialog 
@@ -331,7 +339,6 @@ const resetQueueData = () => {
 
 const handleAddToQueue = (id: number) => {
     queueForm.value.id = id;
-
     showQueueModal.value = true;
 }
 
@@ -354,9 +361,5 @@ onMounted(async () => {
     --p-badge-font-size: 0.6rem;
     --p-badge-font-weight: normal;
     --p-badge-primary-background: #60a5fa;
-}
-
-.p-datatable {
-  @apply rounded-xl overflow-hidden;
 }
 </style>

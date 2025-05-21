@@ -103,26 +103,26 @@ const addToQueue = async () => {
 
     const confirm = await confirmNotification('You want to add this patient to queue?');
 
-    if (confirm) {
-        try {
-            await $fetch('/api/patient/queue/add', {
-                method: 'POST',
-                body: { data: props.form }
-            });
+    if (!confirm) return;
 
-            await $fetch('/api/patient/details/update-queue-status', {
-                method: 'PUT',
-                body: { 
-                    id: props.form.id,
-                    queueStatus: true 
-                }
-            });
+    try {
+        await $fetch('/api/patient/queue/add', {
+            method: 'POST',
+            body: { data: props.form }
+        });
 
-            success('Patient successfully added to queue.');
-            emit('queueSuccess');
-        } catch (error) {
-            console.log(error);
-        }
+        await $fetch('/api/patient/details/update-queue-status', {
+            method: 'PUT',
+            body: { 
+                id: props.form.id,
+                queueStatus: true 
+            }
+        });
+
+        success('Patient successfully added to queue.');
+        emit('queueSuccess');
+    } catch (error) {
+        console.log(error);
     }
 }
 

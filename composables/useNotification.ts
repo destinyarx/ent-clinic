@@ -9,6 +9,10 @@ export const useNotification = () => {
       text: message,
       timer: 2000,
       showConfirmButton: false,
+      background: '#2a2e35',      
+      color: '#e0e0e0',    
+      width: '400px', 
+      padding: '1.5rem',
     })
   }
 
@@ -20,6 +24,10 @@ export const useNotification = () => {
       text: message,
       timer: 2000,
       showConfirmButton: false,
+      background: '#2a2e35',      
+      color: '#e0e0e0',    
+      width: '400px', 
+      padding: '1.5rem',
     })
   }
 
@@ -29,9 +37,9 @@ export const useNotification = () => {
       text: message,
       icon: 'info',
       showCancelButton: true,
-      reverseButtons: false,
-      confirmButtonText: 'Confirm',
       cancelButtonText: 'Cancel',
+      confirmButtonText: 'Confirm',
+      reverseButtons: true,
       
       // ─── STYLE OPTIONS ──────────────────────────────────────────
       background: '#2a2e35',      // popup background

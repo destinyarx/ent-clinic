@@ -10,7 +10,6 @@ export default defineEventHandler(async (event) => {
         const response = await updateQueueStatus(id, queueStatus);
 
         return response;
-
     } catch (error) {
         return {
             success: false,

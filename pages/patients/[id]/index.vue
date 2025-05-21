@@ -1,13 +1,14 @@
 <template>
-    <PatientNavbar>
-        <div> This is the initial page </div>
-    </PatientNavbar>
+    <!-- TODO: add slot for main content or footer here -->
+    <PatientNavbar/>
+    <PatientTabs :id="id"/>
 </template>
 
 <script setup lang="ts">
 definePageMeta({ layout: 'authenticated-layout' })
 
-import PatientNavbar from '@/components/PatientNavbar.vue'
+import PatientNavbar from '@/components/PatientNavbar.vue';
+import PatientTabs from '~/components/PatientTabs.vue';
 
 const { id } = useRoute().params
 const patient = ref<any>(null)
