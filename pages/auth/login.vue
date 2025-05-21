@@ -80,7 +80,7 @@ const login = async () => {
 
     // proceed to login
     userStore.setUserInfo();
-    router.push('/patients');
+    router.push('/dashboard');
 }
 
 </script>

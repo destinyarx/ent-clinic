@@ -5,7 +5,9 @@
 @tailwind components;
 @tailwind utilities;
 
-
+.p-datatable {
+    @apply rounded-xl overflow-hidden;
+}
 
 /* Apply the font globally */
 body {

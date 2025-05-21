@@ -36,8 +36,6 @@
             </div>
         </div>
 
-        <PatientTabs :id="id"/>
-
         <div class="w-full">
             <slot></slot>
         </div>
@@ -47,8 +45,6 @@
 </template>
 
 <script setup lang="ts">
-import PatientTabs from './PatientTabs.vue';
-
 const { id } = useRoute().params
 const patient = ref<any>(null)
 const loading = ref<boolean>(false)

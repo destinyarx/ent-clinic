@@ -9,7 +9,7 @@
             'flex items-center px-4 py-2 -mb-px border-b-2 font-medium cursor-pointer',
             activeTab === tab.name
               ? 'border-blue-500 text-blue-600'
-              : 'border-transparent text-gray-600 hover:text-blue-500 hover:border-blue-500'
+              : 'border-transparent text-zinc-100 hover:text-blue-500 hover:border-blue-500'
           ]"
           type="button"
         >
@@ -20,13 +20,20 @@
   
       <!-- Content here -->
       <div class="mt-4">
-        <p>Current tab: <strong>{{ activeTab }}</strong></p>
+        <Appointment v-if="activeTab === 'appointment'"/>
+        <Diagnosis v-else-if="activeTab === 'diagnosis'"/>
+        <Encounters v-else-if="activeTab === 'visitHistory'"/>
+        <MedicalHistory v-else-if="activeTab === 'medicalHistory'"/>
       </div>
     </div>
   </template>
   
   <script setup>
-  import { ref } from 'vue'
+  import { ref } from 'vue';
+  import Appointment from './Patient/Appointment.vue';
+  import Diagnosis from './Patient/Diagnosis.vue';
+  import Encounters from './Patient/Encounters.vue';
+  import MedicalHistory from './Patient/MedicalHistory.vue';
   
   // Simple inline SVG icons for demo, you can replace with your preferred icon set
   
