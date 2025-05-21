@@ -71,34 +71,36 @@
             <span>
                 Allergy
             </span>
-            <span class="text-xs italic mb-2">
-                <span class="text-yellow-400 ml-2">*</span>
-                Type or select an allergy and press <span class="font-semibold">Enter</span> to add it.
-                <span class="text-yellow-400">*</span>  
-            </span>
         </Message>
         
         <div class="flex flex-col flex-wrap gap-2 w-full mb-8">
-            <div class="flex flex-row gap-2 w-full mb-2">
-                <AutoComplete
-                    v-model="allergy"
-                    @complete="searchAllergy"
-                    @keydown.enter.prevent="addAllergy"
-                    :suggestions="filteredAllergies"
-                    placeholder="Enter or select an allergy"
-                    class="w-[55vw]"
-                    dropdown
-                />
+            <div class="flex flex-row gap-2 w-full">
+                <div class="flex flex-col w-[55vw]">
+                    <AutoComplete
+                        v-model="allergy"
+                        @complete="searchAllergy"
+                        @keydown.enter.prevent="addAllergy"
+                        :suggestions="filteredAllergies"
+                        placeholder="Enter or select an allergy"
+                        class="w-full"
+                        dropdown
+                    />
+                    <span class="text-xs italic">
+                        <span class="text-yellow-400 ml-2">*</span>
+                        Type or select an allergy and press <span class="font-semibold">Enter</span> to add it.
+                        <span class="text-yellow-400">*</span>  
+                    </span>
+                </div>
 
                 <InputText 
                     v-model="props.form.occupation" 
                     variant="outlined" 
                     placeholder="Occupation" 
-                    class="w-[45vw]"
+                    class="w-[45vw] h-12"
                 />
             </div>
 
-            <div class="flex flex-wrap gap-2 items-center w-full text-xs">
+            <div class="flex flex-wrap gap-2 items-center w-full text-xs -mt-2">
                 <span v-if="props.form.allergies.length">
                     <Badge class="bg-neutral-400 rounded-full">
                         {{ props.form.allergies.length === 1 ? 'Allergy' : 'Allergies'  }}

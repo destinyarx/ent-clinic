@@ -30,12 +30,16 @@
                 </template>
     
                 <Column header="Name">
-                    <template #body="slotProps">
-                        {{ slotProps.data.firstName }}
-                        {{ slotProps.data.middleName }}
-                        {{ slotProps.data.lastName }}
+                    <template #body="{ data}">
+                        {{ data.firstName }}
+                        {{ data.middleName ? data.middleName?.charAt(0).toUpperCase() + '.' : '' }}
+                        {{ data.lastName }}
 
-                        <Badge value="Custom" class="special-badge ml-3"></Badge>
+                        <Badge 
+                            v-if="data.queue" 
+                            value="In Queue" 
+                            class="special-badge bg-orange-400 text-white ml-3">
+                        </Badge>
                     </template>
                 </Column>
     
@@ -360,6 +364,5 @@ onMounted(async () => {
     --p-badge-padding: 4px;
     --p-badge-font-size: 0.6rem;
     --p-badge-font-weight: normal;
-    --p-badge-primary-background: #60a5fa;
 }
 </style>

@@ -20,7 +20,7 @@
   
       <!-- Content here -->
       <div class="mt-4">
-        <Appointment v-if="activeTab === 'appointment'"/>
+        <Medication v-if="activeTab === 'medication'"/>
         <Diagnosis v-else-if="activeTab === 'diagnosis'"/>
         <Encounters v-else-if="activeTab === 'visitHistory'"/>
         <MedicalHistory v-else-if="activeTab === 'medicalHistory'"/>
@@ -30,7 +30,7 @@
   
   <script setup>
   import { ref } from 'vue';
-  import Appointment from './Patient/Appointment.vue';
+  import Medication from './Patient/Medication.vue';
   import Diagnosis from './Patient/Diagnosis.vue';
   import Encounters from './Patient/Encounters.vue';
   import MedicalHistory from './Patient/MedicalHistory.vue';
@@ -52,8 +52,8 @@
   
   const tabs = [
     { name: 'diagnosis', label: 'Diagnosis', icon: DiagnosisIcon },
+    { name: 'medication', label: 'Medication', icon: AppointmentIcon },
     { name: 'medicalHistory', label: 'Medical History', icon: HistoryIcon },
-    { name: 'appointment', label: 'Appointment', icon: AppointmentIcon },
     { name: 'visitHistory', label: 'Visit History', icon: VisitHistoryIcon },
   ]
   
