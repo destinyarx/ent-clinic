@@ -7,7 +7,20 @@ export default defineEventHandler(async (event) => {
         const body = await readBody(event);
         data = body.data;
 
-        store(data);
+        const queueData = {
+            patientId: data.id,
+            visitType: data.visitType.name,
+            doctorId: data.doctor.id,
+            reason: data.reason,
+            companion: data.companion,
+        };
+
+        await store(queueData);
+
+        return {
+            success: true,
+            data: 'Patient has been successfully added to queue.',
+        }
     } catch (error) {
         return {
             success: false,

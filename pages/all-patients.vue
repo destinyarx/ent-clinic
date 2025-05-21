@@ -100,7 +100,11 @@
         header="Add to Queue" 
         :style="{ width: '30rem' }" modal>
 
-       <QueueForm :form="queueForm"/>
+       <QueueForm 
+        @queueSuccess="queueSuccess()" 
+        :form="queueForm" 
+        :doctors="doctors"
+        />
     </Dialog>
 </template>
 
@@ -118,7 +122,7 @@ import QueueForm from '~/components/Forms/QueueForm.vue';
 
 const user = useUserStore();
 
-const { success } = useNotification()
+const { success } = useNotification();
 const { visitTypes } = useConstants();
 const router = useRouter();
 const badgeStore = useBadgeStore();
@@ -127,10 +131,16 @@ type PatientFormType = typeof patientForm.value;
 
 interface QueueType {
   id: number | null;
-  visitType: string | null;
   reason: string | null;
-  assignedTo: number | null;
   companion: string | null;
+  doctor: {
+    id: number,
+    fullname: string
+  };
+  visitType: {
+    name: string,
+    value: string
+  };
 }
 
 const formAction = ref();
@@ -206,6 +216,17 @@ const fetchAllPatients = async () => {
         loading.value = false;
     }
 };
+
+// get all doctors
+const doctors = ref([]);
+const fetchAllDoctors = async () => {
+    const { data, error } = await useFetch(`/api/users/get-all-doctors`);
+    doctors.value = data.value ?? [];
+
+    if (error.value) {
+        throw new Error(error.value.message || "Failed to fetch doctors.");
+    }
+}
 
 
 const handleUpdate = (data: Partial<PatientFormType>) => {
@@ -314,9 +335,15 @@ const handleAddToQueue = (id: number) => {
     showQueueModal.value = true;
 }
 
+const queueSuccess = () => {
+    showQueueModal.value = false;
+    fetchAllPatients();
+}
+
 onMounted(async () => {
     await nextTick();
-    await fetchAllPatients();
+    fetchAllPatients();
+    fetchAllDoctors();
 });
 </script>
 

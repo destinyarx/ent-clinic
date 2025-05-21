@@ -55,3 +55,10 @@ export async function updatePatient(patientsInfo: InsertPatient) {
         })
         .where(eq(patients.id, patientsInfo.id));
 };
+
+export async function updateQueueStatus(id: number, status: boolean) {
+    return await db
+        .update(patients)
+        .set({ queue: status })
+        .where(eq(patients.id, id));
+}
