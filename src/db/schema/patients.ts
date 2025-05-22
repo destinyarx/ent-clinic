@@ -13,7 +13,7 @@ export const patients = pgTable("patients", {
     address: varchar(),
     contactNumber: varchar("contact_number", { length: 20 }),
     allergies: text().array(),
-    queue: boolean().default(false),
+    status: varchar({ length: 30 }),
     occupation: varchar("occupation", { length: 50 }),
     admissionId: bigint("admission_id", { mode: 'number' }).references(() => admissions.id),
     createdAt: timestamp("created_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),

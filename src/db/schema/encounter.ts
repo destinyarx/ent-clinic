@@ -13,18 +13,18 @@ export const encounters = pgTable("encounters", {
     admitBy: integer("admit_by").references((): PgColumn => users.id).notNull(),
     visitType: varchar({ length: 20 }),
     status: statusEnum().default('open'),
-    assignTo:  integer("assign_to").references((): PgColumn => doctors.id).notNull(),
+    doctorId:  integer("doctor_id").references((): PgColumn => users.id).notNull(),
     remarks: varchar({ length: 255 }),
-    startedAt: timestamp("updated_at", { mode: 'string' }),
-    endedAt: timestamp("updated_at", { mode: 'string' }),
+    startedAt: timestamp("started_at", { mode: 'string' }),
+    endedAt: timestamp("ended_at", { mode: 'string' }),
     createdAt: timestamp("created_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
     updatedAt: timestamp("updated_at", { mode: 'string' }),
     deletedAt: timestamp("deleted_at", { mode: 'string' }),
 }, (table) => {
     return {
         patientIdIndex: index().using("btree", table.patientId.asc().nullsLast()),
-        assignToIndex: index().using("btree", table.assignTo.asc().nullsLast()),
+        assignToIndex: index().using("btree", table.doctorId.asc().nullsLast()),
     }
 });
 
-export type InsertAdmission = typeof encounters.$inferInsert;
+export type EncounterType = typeof encounters.$inferInsert;

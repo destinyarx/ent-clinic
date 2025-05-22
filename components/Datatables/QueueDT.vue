@@ -1,6 +1,5 @@
 <template>
-
-    <div class="w-full flex flex-wrap justify-center text-sm mt-5 overflow-x-auto">
+    <div class="w-full flex flex-wrap justify-center overflow-x-auto text-sm text-white mt-5">
         <DataTable 
             :value="queueList" 
             size="small" stripedRows
@@ -35,15 +34,14 @@
                 </template>
             </Column>
 
-            <Column header="Name" style="width: 35%">
+            <Column header="Name" style="width: 30%">
                 <template #body="{ data }">
                     {{ data.patientFullName }}
                 </template>
             </Column>
 
-            <Column header="Doctor">
+            <Column header="Doctor" style="width: 20%">
                 <template #body="{ data }">
-                    <div>Assign to:</div>
                     <Badge class="bg-blue-300">
                         <i class="pi pi-user mr-1"></i>
                         {{ data.doctorsFullName }}
@@ -54,16 +52,26 @@
             <Column header="Details">
                 <template #body="{ data }">
                     <div class="text-xs">
-
-                        <div class="font-semibold">Reason:</div>
-                        <div class="italic mb-2">
-                            {{ data.reason ?? 'None' }}
-                        </div>
-    
-                        <div class="font-semibold">Companion:</div>
-                        <div class="italic">
-                            {{ data.companion ?? 'None' }}
-                        </div>
+                        <template v-if="!data.remarks && !data.companion">
+                            <Badge class="text-white bg-gray-700 italic">
+                                No Information
+                            </Badge> 
+                        </template>
+                        <template v-else>
+                            <template v-if="data.remarks">
+                                <div class="font-semibold">Remarks:</div>
+                                <div class="italic mb-2">
+                                    {{ data.remarks }}
+                                </div>
+                            </template>
+        
+                            <template v-if="data.companion">
+                                <div class="font-semibold">Companion:</div>
+                                <div class="italic">
+                                    {{ data.companion }}
+                                </div>
+                            </template>
+                        </template>
                     </div>
                     
                 </template>
@@ -71,13 +79,13 @@
 
             <Column header="Actions" style="width: 10%;">
                 <template #body="{ data }">
-                    <SplitButton label="Actions" :model="actions(data)" rounded severity="info"/>
+                    <SplitButton :model="actions(data)" size="small" label="Actions" severity="info" rounded/>
                 </template>
             </Column>
 
             <!-- Pagination -->
             <template #footer>
-                <div v-if="!loading && queueList?.length" class="flex justify-center items-center gap-4 mt-4">
+                <div v-if="!loading && queueList?.length" class="flex justify-center items-center gap-4">
                     <button 
                         @click="currentPage--; fetchQueueList()" 
                         :disabled="currentPage === 0 || loading"
@@ -104,6 +112,9 @@
 </template>
 
 <script setup lang="ts">
+import { useUserStore } from '@/stores/authStore';
+
+const authUser = useUserStore();
 const { visitTypes } = useConstants();
 const { success, confirmNotification, errorNotification } = useNotification();
 
@@ -159,7 +170,7 @@ const  actions = (data: any) => {
     {
       label: 'Accept Patient',
       icon: 'pi pi-check-square',
-      command: () => handleAccept(data.id),
+      command: () => handleAccept(data),
     },
     {
       label: 'Update',
@@ -174,30 +185,45 @@ const  actions = (data: any) => {
   ];
 }
 
-const handleAccept = async (id: number) => {
+const handleAccept = async (data: any) => {
     const confirm = await confirmNotification('You want to accept this patient?');
 
     if (!confirm) return;
 
     try {
-        await $fetch('/api/patient/queue/add', {
-                method: 'POST',
-                body: { data: props.form }
-            });
+        const encounterDetails = {
+            patientId: data.patientId,
+            doctorId: data.doctorId,
+            admitBy: authUser?.profile?.id,
+            visitType: data.visitType,
+            remarks: data.remarks,
+        };
 
-        await $fetch('/api/patient/details/update-queue-status', {
+        await $fetch('/api/patient/encounter/add', {
+            method: 'POST',
+            body: { data: encounterDetails }
+        });
+
+        await $fetch('/api/patient/queue/delete', {
+            method: 'PUT',
+            body: { id: data.id }
+        });
+
+        await $fetch('/api/patient/details/update-patient-status', {
             method: 'PUT',
             body: { 
-                id: props.form.id,
-                queueStatus: true 
+                id: data.patientId,
+                status: 'open' 
             }
         });
+
+        fetchQueueList();
     } catch (error) {
-        
+        errorNotification('Unexpected error occurs');
+        console.log(error);
     }
 
     success('Patient successfully accepted.');
-    
 }
 
 const handleUpdate = async (data: any) => {
@@ -221,11 +247,11 @@ const handleDelete = async (id: number, patientId: number) => {
             body: { id: id }
         });
 
-        await $fetch('/api/patient/details/update-queue-status', {
+        await $fetch('/api/patient/details/update-patient-status', {
             method: 'PUT',
             body: { 
                 id: patientId,
-                queueStatus: false 
+                status: '' 
             }
         });
 

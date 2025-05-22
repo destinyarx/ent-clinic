@@ -111,11 +111,11 @@ const addToQueue = async () => {
             body: { data: props.form }
         });
 
-        await $fetch('/api/patient/details/update-queue-status', {
+        await $fetch('/api/patient/details/update-patient-status', {
             method: 'PUT',
             body: { 
                 id: props.form.id,
-                queueStatus: true 
+                status: 'in_queue' 
             }
         });
 

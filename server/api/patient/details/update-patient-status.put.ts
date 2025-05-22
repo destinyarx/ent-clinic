@@ -1,13 +1,13 @@
-import { updateQueueStatus } from '@/src/db/queries/patients';
+import { updatePatientStatus } from '@/src/db/queries/patients';
 
 export default defineEventHandler(async (event) => {
     let data = null;
     
     try {
         const body = await readBody(event);
-        const { id, queueStatus } = body;
+        const { id, status } = body;
 
-        const response = await updateQueueStatus(id, queueStatus);
+        const response = await updatePatientStatus(id, status);
 
         return response;
     } catch (error) {

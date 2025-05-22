@@ -35,11 +35,25 @@
                         {{ data.middleName ? data.middleName?.charAt(0).toUpperCase() + '.' : '' }}
                         {{ data.lastName }}
 
-                        <Badge 
-                            v-if="data.queue" 
-                            value="In Queue" 
-                            class="special-badge bg-orange-400 text-white ml-3">
-                        </Badge>
+                        <template v-if="data.status">
+                            <Badge 
+                                v-if="data.status == 'in_queue'" 
+                                value="IN QUEUE" 
+                                class="special-badge bg-orange-400 text-white ml-3">
+                            </Badge>
+
+                            <Badge 
+                                v-else-if="data.status == 'open'" 
+                                value="OPEN" 
+                                class="special-badge bg-blue-400 text-white ml-3">
+                            </Badge>
+
+                            <Badge 
+                                v-else-if="data.status == 'in_progress'" 
+                                value="IN PROGRESS" 
+                                class="special-badge bg-gree-400 text-white ml-3">
+                            </Badge>
+                        </template>
                     </template>
                 </Column>
     
@@ -69,7 +83,7 @@
 
                 <!-- Pagination -->
                 <template #footer>
-                    <div v-if="!loading" class="flex justify-center items-center gap-4 mt-4">
+                    <div v-if="!loading" class="flex justify-center items-center gap-4">
                         <button 
                             @click="currentPage--; fetchAllPatients()" 
                             :disabled="currentPage === 0 || loading"
@@ -167,7 +181,7 @@ const patientForm = ref({
     birthdate: null,
     allergies: [],
     occupation: null,
-    queue: false
+    status: ''
 });
 
 
@@ -302,7 +316,7 @@ const  actions = (data: Partial<PatientFormType>) => {
     },
   ];
 
-  if (!data.queue) {
+  if (!data.status) {
     baseActions.unshift({
       label: 'Add to Queue',
       icon: 'pi pi-plus',
