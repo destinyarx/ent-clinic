@@ -5,12 +5,12 @@ export default defineEventHandler(async (event) => {
 
     try {
         const body = await readBody(event);
-        const { data, admitBy} = body;
+        const { data, createdBy} = body;
 
         const encounterData = {
             patientId: data.patientId,
             doctorId: data.doctorId,
-            admitBy: data.admitBy,
+            createdBy: data.createdBy,
             visitType: data.visitType,
             remarks: data.remarks,
         };

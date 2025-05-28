@@ -18,10 +18,10 @@
     
                     <template v-if="!isCollapsed">
                         <div class="text-center font-semibold mt-3">
-                            Aster Seawalker
+                            {{ authUser.profile.name }}
                         </div>
                         <div class="text-center text-gray-800 font-medium italic dark:text-zinc-50">
-                            Doctor
+                            {{ authUser.profile.role }}
                         </div>
                     </template>
                 </div>
@@ -139,10 +139,12 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from 'vue-router';
+import { useUserStore} from '@/stores/authStore';
 import { useBadgeStore } from '@/stores/notificationStore';
 
 const router = useRouter();
 const supabase = useSupabaseClient();
+const authUser = useUserStore();
 
 const isCollapsed = ref(false);
 const currentTab = ref();
@@ -157,6 +159,8 @@ const setCurrentTab = (tab) => {
 
 const logout = async () => {
     const { error } = await supabase.auth.signOut()
+
+    await authUser.signOut();
     
     if (!error) {
         router.push('/');

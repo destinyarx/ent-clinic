@@ -52,10 +52,13 @@
 </template>
 
 <script setup lang="ts">
-const { visitTypes } = useConstants();
-const { success, confirmNotification } = useNotification();
+import { useUserStore } from '@/stores/authStore';
 
 const emit = defineEmits(['queueSuccess']);
+
+const authUser = useUserStore();
+const { visitTypes } = useConstants();
+const { success, confirmNotification } = useNotification();
 
 interface FormType {
     id: number | null,
@@ -108,7 +111,12 @@ const addToQueue = async () => {
     try {
         await $fetch('/api/patient/queue/add', {
             method: 'POST',
-            body: { data: props.form }
+            body: { 
+                data: {
+                    ...props.form,
+                    createdBy: authUser?.profile?.id,
+                }, 
+            }
         });
 
         await $fetch('/api/patient/details/update-patient-status', {

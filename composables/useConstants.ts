@@ -13,8 +13,6 @@ export const useConstants = () => {
         { value: "preventive",    name: "Preventive",   color: "bg-olive-400",    description: "ENT advice for prevention and wellness." }
     ];
       
-
-
     const allergies = () => {
         return [
             'Peanuts', 

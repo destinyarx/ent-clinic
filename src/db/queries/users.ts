@@ -7,7 +7,7 @@ import { users } from '../schema/users';
 export async function getAllDoctors() {
     return await db
     .select({
-      id: users.id,
+      id: users.supabaseId,
       fullname: sql`CONCAT_WS(' ', ${users.firstName}, ${users.middleName}, ${users.lastName})`,
     })
     .from(users)

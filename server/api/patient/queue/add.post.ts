@@ -13,6 +13,7 @@ export default defineEventHandler(async (event) => {
             doctorId: data.doctor.id,
             reason: data.reason,
             companion: data.companion,
+            createdBy: data.createdBy
         };
 
         await store(queueData);

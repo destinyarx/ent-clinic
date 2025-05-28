@@ -1,4 +1,7 @@
 <template>
+    {{ supabaseUser.id }} <br>
+    {{  user.profile.id }}
+
     <div class="w-full">
         <div class="flex items-center justify-end gap-4">
             <div>Filter By:</div>
@@ -87,10 +90,12 @@
                         <button 
                             @click="currentPage--; fetchAllPatients()" 
                             :disabled="currentPage === 0 || loading"
-                            class="px-3 py-1 border rounded disabled:opacity-50"
+                            class="px-2 py-1 border rounded disabled:opacity-50"
                         >
-                            <i class="pi pi-angle-left"></i>
-                            Previous
+                            <div class="flex flex-row justify-center items-center">
+                                <i class="pi pi-angle-left"></i>
+                                <div>Previous</div>
+                            </div>
                         </button>
 
                         <span>Page {{ currentPage + 1 }}</span>
@@ -98,10 +103,12 @@
                         <button 
                             @click="currentPage++; fetchAllPatients()" 
                             :disabled="!hasNextPage || loading"
-                            class="px-3 py-1 border rounded disabled:opacity-50"
+                            class="px-2 py-1 border rounded disabled:opacity-50"
                         >
-                            Next
-                            <i class="pi pi-angle-right"></i>
+                            <div class="flex flex-row justify-center items-center">
+                                <div> Next </div>
+                                <i class="pi pi-angle-right"></i>
+                            </div>
                         </button>
                     </div>
                 </template>
@@ -147,6 +154,8 @@ import PatientForm from '~/components/Forms/PatientForm.vue';
 import QueueForm from '~/components/Forms/QueueForm.vue';
 
 const user = useUserStore();
+const supabaseUser = useSupabaseUser();
+
 
 const { success } = useNotification();
 const { visitTypes } = useConstants();
@@ -201,7 +210,7 @@ const onRowClick = (event: any) => {
   const rowData = event.data;
   
   console.log('Row clicked:', rowData);
-  router.push(`/patients/${rowData.id}`);
+  router.push(`/patient/${rowData.id}`);
 }
 
 const fetchAllPatients = async () => {

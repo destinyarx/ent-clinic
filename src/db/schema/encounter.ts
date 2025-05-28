@@ -3,20 +3,19 @@ import type { PgColumn } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { users } from "./users";
 import { patients } from "./patients";
-import { doctors } from "./doctors";
 
-export const statusEnum = pgEnum("status", ["open", "closed", "in_progress"]);
+export const statusEnum = pgEnum('status', ['open', 'closed', 'in_progress']);
 
 export const encounters = pgTable("encounters", {
     id: serial("id").primaryKey().notNull(),
     patientId: integer("patient_id").references((): PgColumn => patients.id).notNull(),
-    admitBy: integer("admit_by").references((): PgColumn => users.id).notNull(),
     visitType: varchar({ length: 20 }),
     status: statusEnum().default('open'),
-    doctorId:  integer("doctor_id").references((): PgColumn => users.id).notNull(),
+    doctorId:  varchar("doctor_id", { length: 100 }).references(() => users.supabaseId).notNull(),
     remarks: varchar({ length: 255 }),
     startedAt: timestamp("started_at", { mode: 'string' }),
     endedAt: timestamp("ended_at", { mode: 'string' }),
+    createdBy: varchar("created_by", { length: 100 }).references(() => users.supabaseId).notNull(), 
     createdAt: timestamp("created_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
     updatedAt: timestamp("updated_at", { mode: 'string' }),
     deletedAt: timestamp("deleted_at", { mode: 'string' }),

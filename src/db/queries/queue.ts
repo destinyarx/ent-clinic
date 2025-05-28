@@ -21,7 +21,7 @@ export async function getAllQueue(offset: number, limit: number) {
         })
         .from(queue)
         .leftJoin(patients, eq(patients.id, queue.patientId))
-        .leftJoin(users, eq(users.id, queue.doctorId))
+        .leftJoin(users, eq(users.supabaseId, queue.doctorId))
         .where(isNull(queue.deletedAt))
         .orderBy(asc(queue.createdAt))
         .limit(limit)
