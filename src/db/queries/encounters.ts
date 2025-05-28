@@ -74,14 +74,16 @@ export async function fetchPatients(limit: number, offset: number, doctor_id: st
 }
 
 export async function countPendingPatients(doctorId: string) {
-    return await db
+    const [result] = await db
         .select({ total: count() })
         .from(encounters)
         .where(
             and(
-                eq(encounters.status, 'open'),
-                eq(encounters.doctorId, doctorId),
+            eq(encounters.status, 'open'),
+            eq(encounters.doctorId, doctorId),
             )
         )
         .execute();
+
+    return result?.total ?? 0;
 }

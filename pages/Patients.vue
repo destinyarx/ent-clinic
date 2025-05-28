@@ -11,7 +11,7 @@
 
                 <Button
                     @click="showPendingModal = true" 
-                    :badge="'2'" 
+                    :badge="pendingPatientsCount ? pendingPatientsCount.toString() : undefined" 
                     type="button" 
                     label="Pending Patients" 
                     icon="pi pi-users" 
@@ -181,8 +181,26 @@ const fetchData = async () => {
     }
 }
 
+const pendingPatientsCount = ref<number>(0);
+const getPendingPatientsCount = async () => {
+    const response = await $fetch<{ success: boolean, data: number, error?:string }>('api/patient/encounter/count-pending-patients', {
+        params: { 
+            doctor_id: user?.profile?.id, 
+        }
+    });
+
+    pendingPatientsCount.value = response.data;
+
+    console.log(response.data)
+
+    if(response.error) {
+        console.log(response.error);
+    }
+}
+
 onMounted(() => {
     fetchData();
+    getPendingPatientsCount();
 })
 
 </script>

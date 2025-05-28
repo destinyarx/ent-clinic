@@ -10,7 +10,7 @@
             </div> 
         </template>
 
-        <Column header="Name">
+        <Column header="Name" style="width: 35%;">
             <template #body="{ data }">
                 <span class="font-semibold ml-1">
                     {{ data.patientsFullName }}
@@ -18,7 +18,7 @@
             </template>
         </Column>
 
-        <Column header="Age">
+        <Column header="Age" style="width: 8%;">
             <template #body="{ data }">
                 <span class="font-semibold ml-1">
                     {{ computeAge(data.birthdate) }}
@@ -26,7 +26,7 @@
             </template>
         </Column>
 
-        <Column header="Visit Type">
+        <Column header="Visit Type" style="width: 12%;">
             <template #body="{ data }">
                 <span class="font-semibold ml-1">
                     {{ data.visitType }}
@@ -52,7 +52,7 @@
             </template>
         </Column>
 
-        <Column header="Action">
+        <Column header="Action"  style="width: 10%;">
             <template #body="{ data }">
                 <div class="flex flex-col gap-1">
                     <Button size="small">
@@ -133,3 +133,11 @@ onMounted(() => {
     fetchData();
 });
 </script>
+
+<style scoped>
+.p-column-title {
+  font-size: 0.5rem; /* adjust size as needed */
+  font-weight: semibold;  /* optional */
+}
+
+</style>
