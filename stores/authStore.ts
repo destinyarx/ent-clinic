@@ -33,6 +33,8 @@ export const useUserStore = defineStore('user', () => {
 
   // getter-like helper
   function hasPermission(perm: string) {
+    if (!profile.value?.permissions) return null;
+    
     return profile.value?.permissions.includes(perm) ?? false
   }
 
@@ -79,7 +81,7 @@ export const useUserStore = defineStore('user', () => {
       const permissionNames = permissions?.map((r: RolePermission) => r.permissions.name) ?? []
 
       profile.value = { 
-        id: supabaseUser.value?.id, 
+        id: supabaseUser.value?.id ?? null, 
         name: fullName, 
         role, 
         permissions: permissionNames 
