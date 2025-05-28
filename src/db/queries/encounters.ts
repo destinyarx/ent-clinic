@@ -1,4 +1,4 @@
-import { asc, desc, between, count, eq, getTableColumns, isNull, sql, fn } from 'drizzle-orm';
+import { desc, and, between, count, eq, isNull, sql } from 'drizzle-orm';
 import { db } from '../index';
 
 import type { EncounterType } from '../schema/encounter';
@@ -43,4 +43,45 @@ export async function updateEncounterStatus(id: number, status: Status, ) {
         })
         .where(eq(encounters.id, id));
     }
+}
+
+export async function fetchPatients(limit: number, offset: number, doctor_id: string|null, status: Status|null) {
+    return await db
+        .select({
+            status: encounters.status,
+            visitType: encounters.visitType,
+            remarks: encounters.remarks,
+            startedAt: encounters.startedAt,
+            endedAt: encounters.endedAt,
+            doctorsId: encounters.doctorId,
+            doctorsFullName: sql`CONCAT_WS(' ', ${users.firstName}, ${users.middleName}, ${users.lastName})`.as('doctorsFullName'),
+            patientsFullName: sql`CONCAT_WS(' ', ${patients.firstName}, ${patients.middleName}, ${patients.lastName})`.as('doctorsFullName'),
+            birthdate: patients.birthdate
+        })
+        .from(encounters)
+        .leftJoin(patients, eq(encounters.patientId, patients.id))
+        .leftJoin(users, eq(encounters.doctorId, users.supabaseId))
+        .where(
+            and(
+                isNull(encounters.deletedAt),
+                doctor_id ? eq(encounters.doctorId, doctor_id) : undefined,
+                status ? eq(encounters.status, status) : undefined
+            )
+        )
+        .orderBy(desc(encounters.createdAt))
+        .limit(limit) 
+        .offset(offset); 
+}
+
+export async function countPendingPatients(doctorId: string) {
+    return await db
+        .select({ total: count() })
+        .from(encounters)
+        .where(
+            and(
+                eq(encounters.status, 'open'),
+                eq(encounters.doctorId, doctorId),
+            )
+        )
+        .execute();
 }
