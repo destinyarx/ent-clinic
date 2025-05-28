@@ -1,12 +1,9 @@
 // stores/user.ts
-import { defineStore } from 'pinia';
-import { ref } from 'vue';
-
 export interface UserProfile {
-  id: number
-  name: string
-  role: string
-  permissions: string[]
+  id: string|null
+  name: string|null
+  role: string|null
+  permissions: string[]|null
 }
 
 interface User {
@@ -25,27 +22,36 @@ interface RolePermission {
 }
 
 export const useUserStore = defineStore('user', () => {
+  // Supabase clients
+  const supabase = useSupabaseClient();
+  const supabaseUser = useSupabaseUser();
+
   // state
   const profile = ref<UserProfile | null>(null)
   const loading = ref(false)
   const error = ref<string | null>(null)
-
-  // Supabase clients
-  const supabase = useSupabaseClient()
-  const supabaseUser = useSupabaseUser()
 
   // getter-like helper
   function hasPermission(perm: string) {
     return profile.value?.permissions.includes(perm) ?? false
   }
 
-  // action
+  async function signOut() {
+    profile.value = { 
+      id: null, 
+      name: null, 
+      role: null, 
+      permissions: null 
+    }
+  }
+
   async function setUserInfo() {
     loading.value = true
     error.value = null
 
     try {
-      const user = supabaseUser.value
+      const user = supabaseUser.value;
+
       if (!user) {
         throw new Error('No authenticated user')
       }
@@ -73,7 +79,7 @@ export const useUserStore = defineStore('user', () => {
       const permissionNames = permissions?.map((r: RolePermission) => r.permissions.name) ?? []
 
       profile.value = { 
-        id, 
+        id: supabaseUser.value?.id, 
         name: fullName, 
         role, 
         permissions: permissionNames 
@@ -97,6 +103,7 @@ export const useUserStore = defineStore('user', () => {
 
     // actions
     setUserInfo,
+    signOut
   }
 }, {
   persist: true,

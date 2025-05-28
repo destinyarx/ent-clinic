@@ -89,10 +89,12 @@
                     <button 
                         @click="currentPage--; fetchQueueList()" 
                         :disabled="currentPage === 0 || loading"
-                        class="px-3 py-1 border rounded disabled:opacity-40"
+                        class="px-2 py-1 border rounded disabled:opacity-40"
                     >
-                        <i class="pi pi-angle-left"></i>
-                        Previous
+                        <div class="flex flex-row justify-center items-center">
+                            <i class="pi pi-angle-left"></i>
+                            <div>Previous</div>
+                        </div>
                     </button>
 
                     <span>Page {{ currentPage + 1 }}</span>
@@ -100,10 +102,12 @@
                     <button 
                         @click="currentPage++; fetchQueueList()" 
                         :disabled="!hasNextPage || loading"
-                        class="px-3 py-1 border rounded disabled:opacity-40"
+                        class="px-2 py-1 border rounded disabled:opacity-40"
                     >
-                        Next
-                        <i class="pi pi-angle-right"></i>
+                        <div class="flex flex-row justify-center items-center">
+                            <div> Next </div>
+                            <i class="pi pi-angle-right"></i>
+                        </div>
                     </button>
                 </div>
             </template>
@@ -194,7 +198,7 @@ const handleAccept = async (data: any) => {
         const encounterDetails = {
             patientId: data.patientId,
             doctorId: data.doctorId,
-            admitBy: authUser?.profile?.id,
+            createdBy: authUser?.profile?.id,
             visitType: data.visitType,
             remarks: data.remarks,
         };

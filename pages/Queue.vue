@@ -1,8 +1,4 @@
 <template>
-    <div class="text-center text-3xl">
-        Queue Page
-    </div>
-    
     <QueueDT class="mt-10"/>
 </template>
 
