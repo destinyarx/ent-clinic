@@ -1,7 +1,4 @@
 <template>
-    {{ supabaseUser.id }} <br>
-    {{  user.profile.id }}
-
     <div class="w-full">
         <div class="flex items-center justify-end gap-4">
             <div>Filter By:</div>
@@ -169,12 +166,12 @@ interface QueueType {
   reason: string | null;
   companion: string | null;
   doctor: {
-    id: number,
-    fullname: string
+    id: number|null,
+    fullname: string|null
   };
   visitType: {
-    name: string,
-    value: string
+    name: string|null,
+    value: string|null
   };
 }
 
@@ -276,7 +273,7 @@ const handleUpdate = (data: Partial<PatientFormType>) => {
     patientForm.value.birthdate = data.birthdate ?? null;
     patientForm.value.allergies = data.allergies ?? [];
     patientForm.value.occupation = data.occupation ?? null;
-    patientForm.value.queue = data.queue ?? false;
+    patientForm.value.status = data.status ?? null;
     visible.value = true;
 }
 
@@ -350,18 +347,30 @@ const showQueueModal = ref(false);
 
 const queueForm = ref<QueueType>({
     id: null,
-    visitType: null,
+    visitType: {
+        name: null,
+        value: null
+    },
     reason: null,
-    assignedTo: null,
+    doctor: {
+        id: null,
+        fullname: null
+    },    
     companion: null
 })
 
 const resetQueueData = () => {
     queueForm.value.id = null;
-    queueForm.value.visitType = null;
     queueForm.value.reason = null;
-    queueForm.value.assignedTo = null;
     queueForm.value.companion = null;
+    queueForm.value.visitType = {
+        name: null,
+        value: null
+    };
+    queueForm.value.doctor = {
+        id: null,
+        fullname: null
+    };
 }
 
 const handleAddToQueue = (id: number) => {
