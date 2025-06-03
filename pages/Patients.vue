@@ -27,36 +27,36 @@
             </div> 
         </template>
 
-        <Column header="Name">
+        <Column header="Name" style="width: 30%;">
             <template #body="{ data }">
-                <span class="font-semibold ml-1">
+                <span class="text-sm ml-1">
                     {{ data.patientsFullName }}
                 </span>
             </template>
         </Column>
 
-        <Column header="Age">
+        <Column header="Age" style="width: 5%;">
             <template #body="{ data }">
-                <span class="font-semibold ml-1">
+                <span class="text-sm ml-1">
                     {{ computeAge(data.birthdate) }}
                 </span>
             </template>
         </Column>
 
-        <Column header="Visit Type">
+        <Column header="Visit Type" style="width: 15%;">
             <template #body="{ data }">
-                <span class="font-semibold ml-1">
+                <Badge :class="badgeColor(data.visitType)">
                     {{ data.visitType }}
-                </span>
+                </Badge>
             </template>
         </Column>
 
-        <Column header="Assigned To">
+        <Column header="Assigned To" style="width: 20%;">
             <template #body="{ data }">
-                <Badge severity="info">
+                <Badge severity="info" class="px-2 py-0">
                     <div class="flex flex-row items-center">
-                        <i class="pi pi-user text-white"></i>
-                        <div class="text-white ml-2">
+                        <i class="pi pi-user text-white text-[0.75rem]"></i>
+                        <div class="text-white text-[0.65rem] ml-2">
                             {{ user?.profile?.id && data.doctorsId === user.profile.id ? 'Me' :  data.doctorsFullName }}
                         </div>
                     </div>
@@ -72,14 +72,19 @@
                         {{ data.examination_area }}
                     </div>
                 </template>
+
+                <Badge class="bg-yellow-300 text-[0.55rem] px-1 py-0">
+                    <span class="font-semibold">Started:&nbsp;</span>
+                    {{ formatDateTime(data.startedAt) }}
+                </Badge>
             </template>
         </Column>
 
-        <Column header="Details">
+        <Column header="Action" style="width: 12%;">
             <template #body="{ data }">
-                <Button class="text-xs">
+                <Button class="px-2 py-1">
                     <i class="pi pi-flag-fill text-white"></i>
-                    <span class="font-semibold">Finish Visit</span>
+                    <span class="font-semibold text-xs">Finish Visit</span>
                 </Button>
             </template>
         </Column>
@@ -119,7 +124,7 @@
         position="top" 
         :style="{ width: '60vw' }" modal>
 
-       <PendingPatientsDT />
+       <PendingPatientsDT @closeAndRefresh="closeAndRefresh()"/>
     </Dialog>
 </template>
 
@@ -129,8 +134,11 @@ definePageMeta({ layout: 'authenticated-layout' });
 import PendingPatientsDT from '@/components/Datatables/PendingPatientsDT.vue';
 import { useUserStore } from '@/stores/authStore';
 import { computeAge } from '@/utils/helpers';
+import { useDateFormatter } from '@/composables/useDateFormatter';
 
 const user = useUserStore();
+const { formatDateTime } = useDateFormatter();
+const { visitTypes } = useConstants();
 
 // table
 const patients = ref<any[]>([]);
@@ -196,6 +204,18 @@ const getPendingPatientsCount = async () => {
     if(response.error) {
         console.log(response.error);
     }
+}
+
+const closeAndRefresh = () => {
+    fetchData();
+    showPendingModal.value = false;
+}
+
+const badgeColor = (name: string) => {
+  const match = visitTypes.find(item => item.name.toLowerCase() === name.toLowerCase());
+  if (!match) return '';
+
+  return match.color;
 }
 
 onMounted(() => {

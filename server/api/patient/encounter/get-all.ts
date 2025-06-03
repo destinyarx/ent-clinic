@@ -1,7 +1,7 @@
 import { fetchPatients } from '@/src/db/queries/encounters'
 
 export default defineEventHandler(async (event) => {
-    type Status = 'open'|'closed'|'in_progress';
+    type Status = 'open'|'closed'|'in_progress'|'rejected';
 
     let data;
 

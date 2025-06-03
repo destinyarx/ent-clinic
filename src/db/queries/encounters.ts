@@ -6,7 +6,7 @@ import { patients } from '../schema/patients';
 import { users } from '../schema/users';
 import { encounters } from '../schema/encounter';
 
-type Status = 'open'|'closed'|'in_progress';
+type Status = 'open'|'closed'|'in_progress'|'rejected';
 
 
 export async function store(data: EncounterType) {
@@ -25,13 +25,14 @@ export async function destroy(id: number) {
         .where(eq(encounters.id, id));
 }
 
-export async function updateEncounterStatus(id: number, status: Status, ) {
-    if (status === 'in_progress') {
+export async function updateEncounterStatus(id: number, status: string, ) {
+    if (status === 'in_progress' || status === 'rejected') {
         return await db
             .update(encounters)
             .set({
               status,
-              startedAt: sql`NOW()`,
+              startedAt: status === 'in_progress' ? sql`NOW()` : null,
+              updatedAt: sql`NOW()`,
             })
             .where(eq(encounters.id, id));
     } else if (status === 'closed') {
@@ -48,6 +49,7 @@ export async function updateEncounterStatus(id: number, status: Status, ) {
 export async function fetchPatients(limit: number, offset: number, doctor_id: string|null, status: Status|null) {
     return await db
         .select({
+            id: encounters.id,
             status: encounters.status,
             visitType: encounters.visitType,
             remarks: encounters.remarks,
@@ -64,6 +66,7 @@ export async function fetchPatients(limit: number, offset: number, doctor_id: st
         .where(
             and(
                 isNull(encounters.deletedAt),
+                isNull(encounters.endedAt),
                 doctor_id ? eq(encounters.doctorId, doctor_id) : undefined,
                 status ? eq(encounters.status, status) : undefined
             )

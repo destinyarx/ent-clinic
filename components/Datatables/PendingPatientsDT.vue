@@ -12,7 +12,7 @@
 
         <Column header="Name" style="width: 35%;">
             <template #body="{ data }">
-                <span class="font-semibold ml-1">
+                <span class="ml-1">
                     {{ data.patientsFullName }}
                 </span>
             </template>
@@ -20,7 +20,7 @@
 
         <Column header="Age" style="width: 8%;">
             <template #body="{ data }">
-                <span class="font-semibold ml-1">
+                <span class="ml-1">
                     {{ computeAge(data.birthdate) }}
                 </span>
             </template>
@@ -28,9 +28,9 @@
 
         <Column header="Visit Type" style="width: 12%;">
             <template #body="{ data }">
-                <span class="font-semibold ml-1">
+                <Badge :class="badgeColor(data.visitType)">
                     {{ data.visitType }}
-                </span>
+                </Badge>
             </template>
         </Column>
 
@@ -55,16 +55,16 @@
         <Column header="Action"  style="width: 10%;">
             <template #body="{ data }">
                 <div class="flex flex-col gap-1">
-                    <Button size="small">
+                    <Button @click="handleAction('accept', data.id)" size="small">
                         <i class="pi pi-check-circle"></i>
-                        <span class="font-semibold text-xs">
+                        <span class="text-xs">
                             Accept
                         </span>
                     </Button>
     
-                    <Button size="small" severity="danger">
+                    <Button @click="handleAction('reject', data.id)" size="small" severity="danger">
                         <i class="pi pi-reply"></i>
-                        <span class="font-semibold text-xs">
+                        <span class="text-xs">
                             Reject
                         </span>
                     </Button>
@@ -77,7 +77,12 @@
 <script setup lang="ts">
 import { computeAge } from '@/utils/helpers';
 import { useUserStore } from '@/stores/authStore';
+
+const emit = defineEmits(['closeAndRefresh'])
+
 const user = useUserStore();
+const { success, confirmNotification, errorNotification } = useNotification();
+const { visitTypes } = useConstants();
 
 type Patient = {
     name: string,
@@ -127,6 +132,35 @@ const fetchData = async () => {
     } finally {
         loading.value = false;
     }
+}
+
+const handleAction = async (action: string, id: number) => {
+    const confirm = await confirmNotification('You want to accept this patient?');
+
+    if (confirm) {
+        const response = await $fetch<{ success: boolean, data: any[], error?:string }>('api/patient/encounter/update-status', {
+            method: 'POST',
+            params: { 
+                id:  id, 
+                status: action === 'accept' ? 'in_progress' : 'rejected'
+            }
+        })
+
+        if (response?.error) {
+            errorNotification('Error occured when updating the encounter status.');
+            return;
+        }
+
+        emit('closeAndRefresh');
+        success('Patient has been accepted.');
+    }
+}
+
+const badgeColor = (name: string) => {
+  const match = visitTypes.find(item => item.name.toLowerCase() === name.toLowerCase());
+  if (!match) return '';
+
+  return match.color;
 }
 
 onMounted(() => {
