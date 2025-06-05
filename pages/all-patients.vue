@@ -31,6 +31,12 @@
     
                 <Column header="Name">
                     <template #body="{ data}">
+                        <Avatar 
+                            :label="data.firstName?.charAt(0) ?? 'X'" 
+                            shape="circle" 
+                            class="mr-2" style="background-color: #bae6fd; color: #2a1261" 
+                        />
+
                         {{ data.firstName }}
                         {{ data.middleName ? data.middleName?.charAt(0).toUpperCase() + '.' : '' }}
                         {{ data.lastName }}
@@ -77,7 +83,7 @@
     
                 <Column header="Action" style="width: 15%;">
                     <template #body="slotProps">
-                        <SplitButton label="Actions" :model="actions(slotProps.data)" rounded severity="info"/>
+                        <SplitButton :model="actions(slotProps.data)" label="Actions" severity="info" size="small" rounded class="text-xs px-2 py-0"/>
                     </template>
                 </Column>
 

@@ -7,8 +7,9 @@ export default defineEventHandler(async (event) => {
         const query = getQuery(event);
         const id = Number(query.id);
         const status = String(query.status);
+        const patientId = Number(query.patientId);
         
-        await updateEncounterStatus(id, status);
+        await updateEncounterStatus(id, patientId, status);
 
         return {
             success: true,

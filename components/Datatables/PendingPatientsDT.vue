@@ -55,14 +55,14 @@
         <Column header="Action"  style="width: 10%;">
             <template #body="{ data }">
                 <div class="flex flex-col gap-1">
-                    <Button @click="handleAction('accept', data.id)" size="small">
+                    <Button @click="handleAction('accept', data.patientId, data.id)" size="small">
                         <i class="pi pi-check-circle"></i>
                         <span class="text-xs">
                             Accept
                         </span>
                     </Button>
     
-                    <Button @click="handleAction('reject', data.id)" size="small" severity="danger">
+                    <Button @click="handleAction('reject', data.patientId, data.id)" size="small" severity="danger">
                         <i class="pi pi-reply"></i>
                         <span class="text-xs">
                             Reject
@@ -134,13 +134,14 @@ const fetchData = async () => {
     }
 }
 
-const handleAction = async (action: string, id: number) => {
+const handleAction = async (action: string, patientId: number, id: number) => {
     const confirm = await confirmNotification('You want to accept this patient?');
 
     if (confirm) {
         const response = await $fetch<{ success: boolean, data: any[], error?:string }>('api/patient/encounter/update-status', {
             method: 'POST',
             params: { 
+                patientId:  patientId, 
                 id:  id, 
                 status: action === 'accept' ? 'in_progress' : 'rejected'
             }
