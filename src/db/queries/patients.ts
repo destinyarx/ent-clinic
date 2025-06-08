@@ -2,6 +2,7 @@ import { asc, desc, between, count, eq, getTableColumns, isNull, sql } from 'dri
 import { db } from '../index';
 import type { InsertPatient } from '../schema/patients';
 import { patients } from '../schema/patients';
+import { encounters } from '../schema/encounter';
 
 export async function getAllPatients(offset: number, limit: number) {
     return await db
@@ -15,8 +16,12 @@ export async function getAllPatients(offset: number, limit: number) {
 
 export async function getPatientDetails(id: Number) {
     const result = db
-      .select()
+      .select({
+        patient: patients,             // ↪︎ all patient columns
+        encounterId: encounters.id
+      })
       .from(patients)
+      .leftJoin(encounters, eq(encounters.patientId, patients.id))
       .where(eq(patients.id, id));
 
       return result;
