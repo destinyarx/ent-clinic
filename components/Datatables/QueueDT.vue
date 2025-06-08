@@ -2,13 +2,24 @@
     <div class="w-full flex flex-wrap justify-center overflow-x-auto text-sm text-white mt-5">
         <DataTable 
             :value="queueList" 
+            :loading="loading"
             size="small" stripedRows
             class="w-full max-w-[70rem] min-w-[30rem] rounded-full">
 
+            <template #loading> 
+                <div class="text-xl text-white mt-10">
+                    Fetching patient's queue. Please wait.. 
+                    <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+                </div>
+            </template>
+
             <template #empty> 
-                <div class="text-center text-zinc-100 opacity-70 py-2">
-                    No patient in queue.
+                <div v-if="!loading" class="text-center text-zinc-100 opacity-70 py-2">
+                    No patient found.
                 </div> 
+                <div v-else>
+                    <br/> <br/> <br/>
+                </div>
             </template>
 
             <template #header>

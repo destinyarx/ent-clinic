@@ -8,14 +8,14 @@
             <div class="flex flex-col justify-start items-start text-sm">
                 <div class="mt-2">
                     <span class="font-bold text-sm">Name:</span>
-                    {{ patient?.data?.firstName }}
-                    {{ patient?.data?.middleName ? patient?.data?.middleName.charAt(0) + '.' : '' }}
-                    {{ patient?.data?.lastName }}
+                    {{ props.patient?.firstName }}
+                    {{ props.patient?.middleName ? props.patient?.middleName.charAt(0) + '.' : '' }}
+                    {{ props.patient?.lastName }}
                 </div>
 
                 <div class="mt-2">
                     <span class="font-bold text-sm">Gender:</span>
-                    {{ patient?.data?.gender ? gender[patient.data.gender] : 'Unknown' }}
+                    {{ props.patient?.gender ? gender[props.patient.gender] : 'Unknown' }}
                 </div>
 
                 <div class="flex flex-row flex-wrap mt-2">
@@ -23,8 +23,8 @@
                         Allergies:
                     </span>
 
-                    <template v-if="patient?.data?.allergies.length" >
-                        <Badge v-for="(item, index) in patient.data.allergies" class="bg-neutral-300 mr-1">
+                    <template v-if="props.patient?.allergies?.length" >
+                        <Badge v-for="(item, index) in props.patient.allergies" class="bg-neutral-300 mr-1">
                             {{ item }}
                         </Badge>
                     </template>
@@ -50,16 +50,17 @@ const patient = ref<any>(null)
 const loading = ref<boolean>(false)
 const error   = ref<Error|null>(null)
 
-const fetchPatientDetails = async() => {
-    try {
-        loading.value = true;
-        patient.value = await $fetch(`/api/patient/details/get-patient-details?id=${id}`)
-    } catch (err) {
-        error.value = err instanceof Error ? err : new Error('Unknown fetch error')
-    } finally {
-        loading.value = false
-    }
+interface Patient {
+    firstName: string,
+    middleName: string,
+    lastName: string,
+    gender: string,
+    allergies: string[]
 }
+
+const props = defineProps<{ 
+    patient: Patient | undefined
+}>()
 
 const gender = {
     'M': 'Male',
@@ -67,7 +68,4 @@ const gender = {
     'X': 'Unknown'
 };
 
-onMounted(async () => {
-  await fetchPatientDetails();
-})
 </script>

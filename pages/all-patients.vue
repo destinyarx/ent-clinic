@@ -1,32 +1,36 @@
 <template>
     <div class="w-full">
-        <div class="flex items-center justify-end gap-4">
-            <div>Filter By:</div>
-            <Button type="button" label="Due Date" severity="warning"/>
-            <Button type="button" label="Ongoing" severity="info"/>
-            <Button type="button" label="In Queue" severity="success"/>
-            <Button type="button" label="Finished" severity="help"/>
-        </div>
         <div class="w-full flex flex-wrap justify-center text-sm mt-5 overflow-x-auto">
             <DataTable 
                 :value="patients" 
+                :loading="loading"
                 @row-click="onRowClick" 
                 size="small" stripedRows 
                 class="w-full max-w-[70rem] min-w-[30rem] rounded-full">
 
                 <template #header>
                     <div class="flex flex-wrap items-center justify-between gap-2">
-                        <span class="text-xl font-bold">All Patients</span>
+                        <span class="text-xl font-bold"></span>
                         <div class="card flex justify-end">
                             <Button @click="showPatientModal()" type="button" label="Add Patient" class="add-button"/>
                         </div>
                     </div>
                 </template>
 
+                <template #loading> 
+                    <div class="text-xl text-white mt-10">
+                        Fetching all patient's data. Please wait.. 
+                        <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+                    </div>
+                </template>
+
                 <template #empty> 
-                    <div class="text-center text-zinc-100 opacity-70 py-2">
+                    <div v-if="!loading" class="text-center text-zinc-100 opacity-70 py-2">
                         No patient found.
                     </div> 
+                    <div v-else>
+                        <br/> <br/> <br/>
+                    </div>
                 </template>
     
                 <Column header="Name">
@@ -69,7 +73,7 @@
                     </template>
                 </Column>
     
-                <Column header="Contact Number">
+                <Column header="Last Visit">
                     <template #body="slotProps">
                         {{ slotProps.data.contactNumber }}
                     </template>

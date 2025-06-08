@@ -1,7 +1,7 @@
 <template>
     <!-- TODO: add slot for main content or footer here -->
-    <PatientNavbar/>
-    <PatientTabs :id="id"/>
+    <PatientNavbar :patient="patient?.data ?? undefined"/>
+    <PatientTabs :id="id" :status="patient?.data?.status"/>
 </template>
 
 <script setup lang="ts">
@@ -10,8 +10,15 @@ definePageMeta({ layout: 'authenticated-layout' })
 import PatientNavbar from '@/components/PatientNavbar.vue';
 import PatientTabs from '~/components/PatientTabs.vue';
 
+interface Patient {
+    id: number,
+    age: number,
+    address: string,
+    allergies: string[]
+}
+
 const { id } = useRoute().params
-const patient = ref<any>(null)
+const patient = ref<Patient>()
 const loading = ref<boolean>(false)
 const error   = ref<Error|null>(null)
 

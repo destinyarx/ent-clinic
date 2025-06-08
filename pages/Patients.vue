@@ -1,6 +1,8 @@
 <template>
     <DataTable 
+    @row-click="onRowClick"
     :value="patients" 
+    :loading="loading"
     size="small" stripedRows
     class="w-full max-w-[70rem] min-w-[30rem] rounded-full"
     >
@@ -21,16 +23,26 @@
             </div>
         </template>
 
+        <template #loading> 
+            <div class="text-xl text-white mt-10">
+                Fetching patient's data. Please wait.. 
+                <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+            </div>
+        </template>
+
         <template #empty> 
-            <div class="text-center text-zinc-100 opacity-70 py-2">
-                No Active Patient.
+            <div v-if="!loading" class="text-center text-zinc-100 opacity-70 py-2">
+                No patient found.
             </div> 
+            <div v-else>
+                <br/> <br/> <br/>
+            </div>
         </template>
 
         <Column header="Name" style="width: 30%;">
             <template #body="{ data }">
                 <span class="text-sm ml-1">
-                    {{ data.patientsFullName }}
+                    {{ data.patientsFullName }} {{  data.id }}
                 </span>
             </template>
         </Column>
@@ -83,8 +95,8 @@
         <Column header="Action" style="width: 12%;">
             <template #body="{ data }">
                 <Button class="px-2 py-1">
-                    <i class="pi pi-flag-fill text-white"></i>
-                    <span class="font-semibold text-xs">Finish Visit</span>
+                    <i class="pi pi-flag-fill text-white text-xs -mr-1"></i>
+                    <span class="font-semibold text-[0.5rem]">Complete Visit</span>
                 </Button>
             </template>
         </Column>
@@ -133,10 +145,13 @@ definePageMeta({ layout: 'authenticated-layout' });
 
 import PendingPatientsDT from '@/components/Datatables/PendingPatientsDT.vue';
 import { useUserStore } from '@/stores/authStore';
+import { useRouter } from 'vue-router';
 import { computeAge } from '@/utils/helpers';
 import { useDateFormatter } from '@/composables/useDateFormatter';
 
 const user = useUserStore();
+const router = useRouter();
+
 const { formatDateTime } = useDateFormatter();
 const { visitTypes } = useConstants();
 
@@ -154,6 +169,13 @@ const showAssignedPatientsOnly = ref<boolean>(true);
 
 // pending patients
 const showPendingModal = ref<boolean>(false);
+
+const onRowClick = (event: any) => {
+  const rowData = event.data;
+  
+  console.log('Row clicked:', rowData);
+  router.push(`/patient/${rowData.id}`);
+}
 
 const fetchData = async () => {
     try {
