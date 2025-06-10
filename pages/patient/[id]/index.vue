@@ -8,22 +8,7 @@
         :status="patient?.status"
     />
 
-    <template v-if="currentTab === 'diagnosis'">
-        <Diagnosis :id="patientId" :encounterId="encounterId"/>
-    </template>
-    <template v-else-if="currentTab === 'medication'">
-        <Medications :id="patientId" :encounterId="encounterId"/>
-    </template>
-    <template v-else-if="currentTab === 'vitals'">
-        <Vitals :id="patientId" :encounterId="encounterId"/>
-    </template>
-    <template v-else-if="currentTab === 'medicalHistory'">
-        <MedicalHistory :id="patientId"/>
-    </template>
-    <template v-else-if="currentTab === 'encounterHistory'">
-        <EncounterHistory :id="patientId"/>
-    </template>
-
+    <component :is="currentComponent" :id="patientId" :encounterId="encounterId"/>
 </template>
 
 <script setup lang="ts">
@@ -72,7 +57,25 @@ const fetchPatientDetails = async() => {
 }
 
 const currentTab = ref<string>();
+const currentComponent = ref();
 const setCurrentTab = (tab: string) => {
+    switch (tab){
+        case 'diagnosis': 
+            currentComponent.value = Diagnosis;
+            break;
+        case 'medication': 
+            currentComponent.value = Medications;
+            break;
+        case 'vitals': 
+            currentComponent.value = Vitals;
+            break;
+        case 'medicalHistory': 
+            currentComponent.value = MedicalHistory;
+            break;
+        case 'encounterHistory': 
+            currentComponent.value = EncounterHistory;
+            break;
+    }
     currentTab.value = tab;
 }
 

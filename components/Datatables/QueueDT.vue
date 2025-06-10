@@ -4,7 +4,7 @@
             :value="queueList" 
             :loading="loading"
             size="small" stripedRows
-            class="w-full max-w-[70rem] min-w-[30rem] rounded-full">
+            class="w-full max-w-[80rem] min-w-[30rem] rounded-full">
 
             <template #loading> 
                 <div class="text-xl text-white mt-10">

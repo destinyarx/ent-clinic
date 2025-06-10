@@ -1,126 +1,124 @@
 <template>
-    <div class="w-full">
-        <div class="w-full flex flex-wrap justify-center text-sm mt-5 overflow-x-auto">
-            <DataTable 
-                :value="patients" 
-                :loading="loading"
-                @row-click="onRowClick" 
-                size="small" stripedRows 
-                class="w-full max-w-[70rem] min-w-[30rem] rounded-full">
+    <div class="w-full flex flex-wrap justify-center text-sm mt-5 overflow-x-auto">
+        <DataTable 
+            :value="patients" 
+            :loading="loading"
+            @row-click="onRowClick" 
+            size="small" stripedRows 
+            class="w-full max-w-[80rem] min-w-[30rem] rounded-full">
 
-                <template #header>
-                    <div class="flex flex-wrap items-center justify-between gap-2">
-                        <span class="text-xl font-bold"></span>
-                        <div class="card flex justify-end">
-                            <Button @click="showPatientModal()" type="button" label="Add Patient" class="add-button"/>
+            <template #header>
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <span class="text-xl font-bold"></span>
+                    <div class="card flex justify-end">
+                        <Button @click="showPatientModal()" type="button" icon="pi pi-plus-circle" label="Add Patient" class="add-button"/>
+                    </div>
+                </div>
+            </template>
+
+            <template #loading> 
+                <div class="text-xl text-white mt-10">
+                    Fetching all patient's data. Please wait.. 
+                    <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+                </div>
+            </template>
+
+            <template #empty> 
+                <div v-if="!loading" class="text-center text-zinc-100 opacity-70 py-2">
+                    No patient found.
+                </div> 
+                <div v-else>
+                    <br/> <br/> <br/>
+                </div>
+            </template>
+
+            <Column header="Name">
+                <template #body="{ data}">
+                    <Avatar 
+                        :label="data.firstName?.charAt(0) ?? 'X'" 
+                        shape="circle" 
+                        class="mr-2" style="background-color: #bae6fd; color: #2a1261" 
+                    />
+
+                    {{ data.firstName }}
+                    {{ data.middleName ? data.middleName?.charAt(0).toUpperCase() + '.' : '' }}
+                    {{ data.lastName }}
+
+                    <template v-if="data.status">
+                        <Badge 
+                            v-if="data.status == 'in_queue'" 
+                            value="IN QUEUE" 
+                            class="special-badge bg-orange-400 text-white ml-3">
+                        </Badge>
+
+                        <Badge 
+                            v-else-if="data.status == 'open'" 
+                            value="OPEN" 
+                            class="special-badge bg-blue-400 text-white ml-3">
+                        </Badge>
+
+                        <Badge 
+                            v-else-if="data.status == 'in_progress'" 
+                            value="IN PROGRESS" 
+                            class="special-badge bg-gree-400 text-white ml-3">
+                        </Badge>
+                    </template>
+                </template>
+            </Column>
+
+            <Column header="Gender">
+                <template #body="slotProps">
+                    {{ slotProps.data.gender === 'M' ? 'Male' : (slotProps.data.gender === 'M' ? 'Female' : 'Unknown') }}
+                </template>
+            </Column>
+
+            <Column header="Last Visit">
+                <template #body="slotProps">
+                    {{ slotProps.data.contactNumber }}
+                </template>
+            </Column>
+
+            <Column header="Address">
+                <template #body="slotProps">
+                    {{ slotProps.data.address }}
+                </template>
+            </Column>
+
+            <Column header="Action" style="width: 15%;">
+                <template #body="slotProps">
+                    <SplitButton :model="actions(slotProps.data)" label="Actions" severity="info" size="small" rounded class="text-xs px-2 py-0"/>
+                </template>
+            </Column>
+
+            <!-- Pagination -->
+            <template #footer>
+                <div v-if="!loading" class="flex justify-center items-center gap-4">
+                    <button 
+                        @click="currentPage--; fetchAllPatients()" 
+                        :disabled="currentPage === 0 || loading"
+                        class="px-2 py-1 border rounded disabled:opacity-50"
+                    >
+                        <div class="flex flex-row justify-center items-center">
+                            <i class="pi pi-angle-left"></i>
+                            <div>Previous</div>
                         </div>
-                    </div>
-                </template>
+                    </button>
 
-                <template #loading> 
-                    <div class="text-xl text-white mt-10">
-                        Fetching all patient's data. Please wait.. 
-                        <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
-                    </div>
-                </template>
+                    <span>Page {{ currentPage + 1 }}</span>
 
-                <template #empty> 
-                    <div v-if="!loading" class="text-center text-zinc-100 opacity-70 py-2">
-                        No patient found.
-                    </div> 
-                    <div v-else>
-                        <br/> <br/> <br/>
-                    </div>
-                </template>
-    
-                <Column header="Name">
-                    <template #body="{ data}">
-                        <Avatar 
-                            :label="data.firstName?.charAt(0) ?? 'X'" 
-                            shape="circle" 
-                            class="mr-2" style="background-color: #bae6fd; color: #2a1261" 
-                        />
-
-                        {{ data.firstName }}
-                        {{ data.middleName ? data.middleName?.charAt(0).toUpperCase() + '.' : '' }}
-                        {{ data.lastName }}
-
-                        <template v-if="data.status">
-                            <Badge 
-                                v-if="data.status == 'in_queue'" 
-                                value="IN QUEUE" 
-                                class="special-badge bg-orange-400 text-white ml-3">
-                            </Badge>
-
-                            <Badge 
-                                v-else-if="data.status == 'open'" 
-                                value="OPEN" 
-                                class="special-badge bg-blue-400 text-white ml-3">
-                            </Badge>
-
-                            <Badge 
-                                v-else-if="data.status == 'in_progress'" 
-                                value="IN PROGRESS" 
-                                class="special-badge bg-gree-400 text-white ml-3">
-                            </Badge>
-                        </template>
-                    </template>
-                </Column>
-    
-                <Column header="Gender">
-                    <template #body="slotProps">
-                        {{ slotProps.data.gender === 'M' ? 'Male' : (slotProps.data.gender === 'M' ? 'Female' : 'Unknown') }}
-                    </template>
-                </Column>
-    
-                <Column header="Last Visit">
-                    <template #body="slotProps">
-                        {{ slotProps.data.contactNumber }}
-                    </template>
-                </Column>
-    
-                <Column header="Address">
-                    <template #body="slotProps">
-                        {{ slotProps.data.address }}
-                    </template>
-                </Column>
-    
-                <Column header="Action" style="width: 15%;">
-                    <template #body="slotProps">
-                        <SplitButton :model="actions(slotProps.data)" label="Actions" severity="info" size="small" rounded class="text-xs px-2 py-0"/>
-                    </template>
-                </Column>
-
-                <!-- Pagination -->
-                <template #footer>
-                    <div v-if="!loading" class="flex justify-center items-center gap-4">
-                        <button 
-                            @click="currentPage--; fetchAllPatients()" 
-                            :disabled="currentPage === 0 || loading"
-                            class="px-2 py-1 border rounded disabled:opacity-50"
-                        >
-                            <div class="flex flex-row justify-center items-center">
-                                <i class="pi pi-angle-left"></i>
-                                <div>Previous</div>
-                            </div>
-                        </button>
-
-                        <span>Page {{ currentPage + 1 }}</span>
-
-                        <button 
-                            @click="currentPage++; fetchAllPatients()" 
-                            :disabled="!hasNextPage || loading"
-                            class="px-2 py-1 border rounded disabled:opacity-50"
-                        >
-                            <div class="flex flex-row justify-center items-center">
-                                <div> Next </div>
-                                <i class="pi pi-angle-right"></i>
-                            </div>
-                        </button>
-                    </div>
-                </template>
-            </DataTable>
-        </div>
+                    <button 
+                        @click="currentPage++; fetchAllPatients()" 
+                        :disabled="!hasNextPage || loading"
+                        class="px-2 py-1 border rounded disabled:opacity-50"
+                    >
+                        <div class="flex flex-row justify-center items-center">
+                            <div> Next </div>
+                            <i class="pi pi-angle-right"></i>
+                        </div>
+                    </button>
+                </div>
+            </template>
+        </DataTable>
     </div>
         
     <Dialog 
