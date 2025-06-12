@@ -83,6 +83,7 @@ export async function fetchPatients(limit: number, offset: number, doctor_id: st
             id: encounters.id,
             status: encounters.status,
             visitType: encounters.visitType,
+            category: encounters.category,
             remarks: encounters.remarks,
             startedAt: encounters.startedAt,
             endedAt: encounters.endedAt,

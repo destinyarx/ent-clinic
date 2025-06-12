@@ -381,6 +381,10 @@ const queueForm = ref<QueueType>({
         name: null,
         value: null
     },
+    caseCategory: {
+        name: null,
+        value: null
+    },
     reason: null,
     doctor: {
         id: null,

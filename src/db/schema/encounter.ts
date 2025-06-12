@@ -5,12 +5,14 @@ import { users } from "./users";
 import { patients } from "./patients";
 
 export const statusEnum = pgEnum('status', ['open', 'closed', 'in_progress', 'rejected', 'completed']);
+export const categoryEnum = pgEnum('category', ['ear', 'nose', 'throat', 'eye', 'mixed']);
 
 export const encounters = pgTable("encounters", {
     id: serial("id").primaryKey().notNull(),
     patientId: integer("patient_id").references((): PgColumn => patients.id).notNull(),
     visitType: varchar({ length: 20 }),
     status: statusEnum().default('open'),
+    category: categoryEnum(),
     doctorId:  varchar("doctor_id", { length: 100 }).references(() => users.supabaseId).notNull(),
     remarks: varchar({ length: 255 }),
     startedAt: timestamp("started_at", { mode: 'string' }),

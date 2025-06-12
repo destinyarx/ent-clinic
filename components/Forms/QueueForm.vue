@@ -15,12 +15,27 @@
         </div>
 
         <div>
+            <label for="visit" class="text-sm font-light mb-1">Case Category</label>
+            <Select 
+                v-model="props.form.caseCategory" 
+                :options="anatomicalCategories"
+                :invalid="errors.caseCategory"
+                name="visitTypes.name"  
+                optionLabel="name" 
+                placeholder="Case Category" 
+                fluid
+            />
+            <Message v-if="errors.caseCategory" size="small" severity="error" variant="simple">Visit type is a required field.</Message>
+        </div>
+
+        <div>
             <label for="doctor" class="text-sm font-light mb-1">Assign to</label>
+
             <AutoComplete
                 v-model="props.form.doctor"
                 @complete="searchDoctor"
                 :suggestions="filteredDoctors"
-                optionLabel="fullname"
+                :optionLabel="(option) => option?.fullname || ''"
                 placeholder="Select Assigned Doctor"
                 class="w-full"
                 dropdown
@@ -57,12 +72,16 @@ import { useUserStore } from '@/stores/authStore';
 const emit = defineEmits(['queueSuccess']);
 
 const authUser = useUserStore();
-const { visitTypes } = useConstants();
+const { visitTypes, anatomicalCategories } = useConstants();
 const { success, confirmNotification } = useNotification();
 
 interface FormType {
     id: number | null,
     visitType: {
+        name: string,
+        value: string
+    },
+    caseCategory: {
         name: string,
         value: string
     },
@@ -76,6 +95,7 @@ interface FormType {
 
 interface FormTypeErrors {
     visitType: boolean,
+    caseCategory: boolean,
     doctor: boolean,
 }
 
@@ -91,11 +111,13 @@ const props = defineProps<{
 
 const errors = ref<FormTypeErrors>({
     visitType: false,
+    caseCategory: false,
     doctor: false
 });
 
 const validateForm = () => {
     errors.value.visitType = !props.form.visitType?.name ? true : false;
+    errors.value.caseCategory = !props.form.caseCategory?.name ? true : false;
     errors.value.doctor = !props.form.doctor?.id ? true : false;
 
     return !errors.value.visitType && !errors.value.doctor;

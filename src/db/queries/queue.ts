@@ -13,6 +13,7 @@ export async function getAllQueue(offset: number, limit: number) {
             patientId: queue.patientId,
             doctorId: queue.doctorId,
             visitType: queue.visitType,        
+            category: queue.category,        
             remarks: queue.remarks,        
             companion: queue.companion,        
             createdAt: queue.createdAt,        

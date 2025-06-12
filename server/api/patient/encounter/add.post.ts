@@ -12,6 +12,7 @@ export default defineEventHandler(async (event) => {
             doctorId: data.doctorId,
             createdBy: data.createdBy,
             visitType: data.visitType,
+            category: data.category,
             remarks: data.remarks,
         };
 

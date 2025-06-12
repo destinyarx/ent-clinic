@@ -63,12 +63,19 @@
             <Column header="Details">
                 <template #body="{ data }">
                     <div class="text-xs">
-                        <template v-if="!data.remarks && !data.companion">
+                        <template v-if="!data.remarks && !data.companion && !data.category">
                             <Badge class="text-white bg-gray-700 italic">
                                 No Information
                             </Badge> 
                         </template>
                         <template v-else>
+                            <template v-if="data.category">
+                                <div class="font-semibold">Case Category:</div>
+                                <div class="italic mb-2">
+                                    {{ data.category }}
+                                </div>
+                            </template>
+
                             <template v-if="data.remarks">
                                 <div class="font-semibold">Remarks:</div>
                                 <div class="italic mb-2">
@@ -211,6 +218,7 @@ const handleAccept = async (data: any) => {
             doctorId: data.doctorId,
             createdBy: authUser?.profile?.id,
             visitType: data.visitType,
+            category: data.category,
             remarks: data.remarks,
         };
 

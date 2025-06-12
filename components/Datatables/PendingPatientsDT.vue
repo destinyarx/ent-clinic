@@ -45,6 +45,14 @@
             </template>
         </Column>
 
+        <Column header="Category" style="width: 12%;">
+            <template #body="{ data }">
+                <Badge v-if="data.category" class="bg-purple-400 text-white">
+                    {{ data.category }}
+                </Badge>
+            </template>
+        </Column>
+
         <Column header="Details">
             <template #body="{ data }">
                 <template v-if="data.remarks">

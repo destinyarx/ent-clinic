@@ -12,6 +12,14 @@ export const useConstants = () => {
         { value: "screening",     name: "Screening",    color: "bg-lime-400",     description: "Routine hearing or throat health check." },
         { value: "preventive",    name: "Preventive",   color: "bg-olive-400",    description: "ENT advice for prevention and wellness." }
     ];
+
+    const anatomicalCategories = [
+        { value: 'eye', name: 'Eye', icon: '' },
+        { value: 'ear', name: 'Ear', icon: '' },
+        { value: 'nose', name: 'Nose', icon: '' },
+        { value: 'throat', name: 'Throat', icon: '' },
+        { value: 'mixed', name: 'Mixed', icon: '' }
+    ]
       
     const allergies = () => {
         return [
@@ -30,5 +38,5 @@ export const useConstants = () => {
         ];
     }
 
-    return { visitTypes, allergies }
+    return { visitTypes, anatomicalCategories, allergies }
 }

@@ -10,6 +10,7 @@ export default defineEventHandler(async (event) => {
         const queueData = {
             patientId: data.id,
             visitType: data.visitType.name,
+            category: data.caseCategory.value,
             doctorId: data.doctor.id,
             reason: data.reason,
             companion: data.companion,
