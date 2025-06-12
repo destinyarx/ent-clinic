@@ -32,6 +32,11 @@ export async function updateEncounterStatus(id: number, patientId: number, statu
         .set({ status: status })
         .where(eq(patients.id, patientId));
 
+    if (status === 'in_progress') {
+        await db.update(patients)
+        .set({ latestVisit: sql`NOW()` })
+        .where(eq(patients.id, patientId));
+    }
 
     if (status === 'in_progress' || status === 'rejected') {
         return await db
@@ -51,6 +56,25 @@ export async function updateEncounterStatus(id: number, patientId: number, statu
         })
         .where(eq(encounters.id, id));
     }
+}
+
+export async function finishVisit(patientId: number, encounterId: number) {
+    await db.transaction( async (tx) => {
+        await tx.update(patients)
+            .set({ 
+                status: null,
+                encounterId: null 
+            })
+            .where(eq(patients.id, patientId));
+
+        await tx.update(encounters)
+        .set({
+          status: 'completed',
+          endedAt: sql`NOW()`,
+          updatedAt: sql`NOW()`,
+        })
+        .where(eq(encounters.id, encounterId));
+    })
 }
 
 export async function fetchPatients(limit: number, offset: number, doctor_id: string|null, status: Status|null) {
