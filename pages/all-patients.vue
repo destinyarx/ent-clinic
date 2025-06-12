@@ -33,7 +33,7 @@
             </template>
 
             <Column header="Name">
-                <template #body="{ data}">
+                <template #body="{ data }">
                     <Avatar 
                         :label="data.firstName?.charAt(0) ?? 'X'" 
                         shape="circle" 
@@ -43,6 +43,17 @@
                     {{ data.firstName }}
                     {{ data.middleName ? data.middleName?.charAt(0).toUpperCase() + '.' : '' }}
                     {{ data.lastName }}
+
+                    <i 
+                        v-if="data.gender === 'M'"
+                        class="pi pi-mars text-blue-500" 
+                        style="font-size: 1.2rem">
+                    </i>
+                    <i 
+                        v-else-if="data.gender === 'F'"
+                        class="pi pi-venus text-pink-500" 
+                        style="font-size: 1.2rem">
+                    </i>
 
                     <template v-if="data.status">
                         <Badge 
@@ -66,15 +77,25 @@
                 </template>
             </Column>
 
-            <Column header="Gender">
-                <template #body="slotProps">
-                    {{ slotProps.data.gender === 'M' ? 'Male' : (slotProps.data.gender === 'M' ? 'Female' : 'Unknown') }}
+            <Column header="Age">
+                <template #body="{ data }">
+                    <template v-if="data.birthdate">
+                        {{ computeAge(data.birthdate) }}
+                    </template>
+                    <template v-else>
+                        <i class="pi pi-question" style="color: gray"></i>
+                    </template>
                 </template>
             </Column>
 
             <Column header="Last Visit">
-                <template #body="slotProps">
-                    {{ slotProps.data.contactNumber }}
+                <template #body="{ data }">
+                    <Badge v-if="data.latestVisit" class="bg-cyan-400 text-white text-[0.5rem] py-0 px-1">
+                        {{ describeDateGap(data.latestVisit) }}
+                    </Badge>
+                    <Badge v-else class="bg-gray-400 text-white text-[0.55rem]">
+                        None
+                    </Badge>
                 </template>
             </Column>
 
@@ -151,12 +172,13 @@ definePageMeta({
     layout: 'authenticated-layout',
 })
 
-import { nextTick } from 'vue';
-import { useRouter } from 'vue-router';
-import { useUserStore } from '@/stores/authStore';
-import { useBadgeStore } from '@/stores/notificationStore';
-import PatientForm from '~/components/Forms/PatientForm.vue';
-import QueueForm from '~/components/Forms/QueueForm.vue';
+import { nextTick } from 'vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/authStore'
+import { useBadgeStore } from '@/stores/notificationStore'
+import PatientForm from '@/components/Forms/PatientForm.vue'
+import QueueForm from '@/components/Forms/QueueForm.vue'
+import { computeAge, describeDateGap  } from '@/utils/helpers'
 
 const user = useUserStore();
 const supabaseUser = useSupabaseUser();

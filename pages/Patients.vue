@@ -44,7 +44,7 @@
             <Column header="Name" style="width: 30%;">
                 <template #body="{ data }">
                     <span class="text-sm ml-1">
-                        {{ data.patientsFullName }} {{  data.id }}
+                        {{ data.patientsFullName }}
                     </span>
                 </template>
             </Column>
@@ -96,7 +96,7 @@
     
             <Column header="Action" style="width: 12%;">
                 <template #body="{ data }">
-                    <Button class="px-2 py-1">
+                    <Button @click="finishVisit(data.patientId, data.id)" class="px-2 py-1">
                         <i class="pi pi-flag-fill text-white text-xs -mr-1"></i>
                         <span class="font-semibold text-[0.5rem]">Complete Visit</span>
                     </Button>
@@ -144,17 +144,18 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({ layout: 'authenticated-layout' });
+definePageMeta({ layout: 'authenticated-layout' })
 
-import PendingPatientsDT from '@/components/Datatables/PendingPatientsDT.vue';
-import { useUserStore } from '@/stores/authStore';
-import { useRouter } from 'vue-router';
-import { computeAge } from '@/utils/helpers';
-import { useDateFormatter } from '@/composables/useDateFormatter';
+import PendingPatientsDT from '@/components/Datatables/PendingPatientsDT.vue'
+import { useUserStore } from '@/stores/authStore'
+import { useRouter } from 'vue-router'
+import { computeAge } from '@/utils/helpers'
+import { useDateFormatter } from '@/composables/useDateFormatter'
 
 const user = useUserStore();
 const router = useRouter();
 
+const { success, errorNotification, confirmNotification } = useNotification()
 const { formatDateTime } = useDateFormatter();
 const { visitTypes } = useConstants();
 
@@ -183,12 +184,16 @@ const onRowClick = (event: any) => {
 const fetchData = async () => {
     try {
         loading.value = true;
+
+        // update badge count for pending patients
+        getPendingPatientsCount();
+
         const response = await $fetch<{ success: boolean, data: any[], error?:string }>('api/patient/encounter/get-all', {
             params: { 
                 offset: currentPage.value,
                 itemsPerPage: itemsPerPage,
                 doctor_id: showAssignedPatientsOnly.value ? user?.profile?.id : null, 
-                status: filterStatus.value
+                status: 'in_progress'
             }
         })
 
@@ -231,6 +236,28 @@ const getPendingPatientsCount = async () => {
     }
 }
 
+const finishVisit = async (patientId: number, encounterId: number) => {
+    try {
+        const confirm = await confirmNotification('You want to complete this patient visit?')
+
+        if (!confirm) return;
+
+        const response = await $fetch('api/patient/encounter/finish-visit', {
+            method: 'POST',
+            params: {
+                patientId: patientId,
+                encounterId: encounterId
+            }
+        })
+
+        fetchData()
+        success('Patient visit is successfully completed.')
+    } catch (error) {
+        console.log(error)
+        errorNotification('Unexpected Error Occurs.')
+    }
+}
+
 const closeAndRefresh = () => {
     fetchData();
     showPendingModal.value = false;
@@ -245,7 +272,6 @@ const badgeColor = (name: string) => {
 
 onMounted(() => {
     fetchData();
-    getPendingPatientsCount();
 })
 
 </script>
