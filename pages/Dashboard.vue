@@ -2,10 +2,6 @@
     <div class="text-5xl">
         Dashboard
     </div>
-
-    <div class="text-center text-sm">
-        {{ userStore.profile }}
-    </div>
 </template>
 
 <script setup lang="ts">

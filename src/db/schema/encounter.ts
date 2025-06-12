@@ -4,7 +4,7 @@ import { sql } from "drizzle-orm";
 import { users } from "./users";
 import { patients } from "./patients";
 
-export const statusEnum = pgEnum('status', ['open', 'closed', 'in_progress', 'rejected']);
+export const statusEnum = pgEnum('status', ['open', 'closed', 'in_progress', 'rejected', 'completed']);
 
 export const encounters = pgTable("encounters", {
     id: serial("id").primaryKey().notNull(),

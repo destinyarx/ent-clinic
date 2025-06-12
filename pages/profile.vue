@@ -83,7 +83,21 @@
                         Permissions:
                     </div>
                     <div class="italic font-light">
-                        {{ authUser?.profile?.permissions }}
+                        <template v-if="authUser?.profile?.permissions">
+                            <Badge 
+                            v-for="permission in authUser.profile.permissions"
+                            severity="info" 
+                            class="text-xs py-2 px-1 mr-1"
+                            >
+                                {{ permission }}
+                            </Badge>
+                        </template>
+
+                        <template  v-else>
+                            <Badge severity="secondary" class="bg-gray-400">
+                                None
+                            </Badge>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -91,7 +105,7 @@
 
         <template #footer>
             <div class="flex justify-center mt-4">
-                <Button label="Update Profile" icon="pi pi-user-edit"/>
+                <Button label="Edit Profile" icon="pi pi-user-edit"/>
             </div>
         </template>
     </Card>
