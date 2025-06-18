@@ -58,6 +58,7 @@ const tabs = ref([
   {
     value: 'diagnosis',
     label: 'Diagnosis',
+    icon: DiagnosisIcon,
     command: () => {
       console.log('Diagnosis clicked');
       emit('setCurrentTab', 'diagnosis');

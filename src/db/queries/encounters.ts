@@ -1,4 +1,4 @@
-import { desc, and, between, count, eq, isNull, sql } from 'drizzle-orm';
+import { desc, and, between, count, eq, isNull, isNotNull, sql } from 'drizzle-orm';
 import { db } from '../index';
 
 import type { EncounterType } from '../schema/encounter';
@@ -102,6 +102,35 @@ export async function fetchPatients(limit: number, offset: number, doctor_id: st
                 isNull(encounters.endedAt),
                 doctor_id ? eq(encounters.doctorId, doctor_id) : undefined,
                 status ? eq(encounters.status, status) : undefined
+            )
+        )
+        .orderBy(desc(encounters.createdAt))
+        .limit(limit) 
+        .offset(offset); 
+}
+
+export async function getEncounterHistory(id: number, limit: number, offset: number) {
+    return await db
+        .select({
+            id: encounters.id,
+            status: encounters.status,
+            visitType: encounters.visitType,
+            category: encounters.category,
+            remarks: encounters.remarks,
+            startedAt: encounters.startedAt,
+            endedAt: encounters.endedAt,
+            patientId: encounters.patientId,
+            doctorsId: encounters.doctorId,
+            doctorsFullName: sql`CONCAT_WS(' ', ${users.firstName}, ${users.middleName}, ${users.lastName})`.as('doctorsFullName'),
+        })
+        .from(encounters)
+        .leftJoin(users, eq(encounters.doctorId, users.supabaseId))
+        .where(
+            and(
+                eq(encounters.patientId, id),
+                isNull(encounters.deletedAt),
+                isNotNull(encounters.startedAt),
+                isNotNull(encounters.endedAt)
             )
         )
         .orderBy(desc(encounters.createdAt))

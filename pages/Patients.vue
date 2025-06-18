@@ -1,6 +1,16 @@
 <template>
+    <div class="flex justify-end mb-2">
+        <Button
+            @click="showPendingModal = true" 
+            :badge="pendingPatientsCount ? pendingPatientsCount.toString() : undefined" 
+            type="button" 
+            label="Pending Patients" 
+            icon="pi pi-users" 
+            badgeSeverity="danger" 
+            variant="primary"  
+        />
+    </div>
     <div class="flex justify-center w-full">
-
         <DataTable 
         @row-click="onRowClick"
         :value="patients" 
@@ -10,18 +20,30 @@
         >
     
             <template #header>
-                <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="flex flex-wrap items-center justify-between max-w-[95vw] gap-2">
                     <span class="text-xl font-bold">Patients</span>
-    
-                    <Button
-                        @click="showPendingModal = true" 
-                        :badge="pendingPatientsCount ? pendingPatientsCount.toString() : undefined" 
-                        type="button" 
-                        label="Pending Patients" 
-                        icon="pi pi-users" 
-                        badgeSeverity="danger" 
-                        variant="primary"  
-                    />
+
+                    <div class="flex flex-row gap-2 max-w-[70%]">
+                        <MultiSelect 
+                            v-model="filterByType" 
+                            :options="visitTypes"
+                            display="chip" 
+                            optionLabel="name" 
+                            placeholder="Filter by Types"
+                            size="small"
+                        >
+                            <template #option="slotProps">
+                                <div class="flex items-center text-sm">
+                                    {{ slotProps.option.name }}
+                                </div>
+                            </template>
+                        </MultiSelect>
+
+                        <IconField>
+                            <InputIcon class="pi pi-search" />
+                            <InputText v-model="searchValue" placeholder="Search" size="small"/>
+                        </IconField>
+                    </div>
                 </div>
             </template>
     
@@ -167,6 +189,7 @@ const currentPage = ref<number>(0);
 const itemsPerPage = 10;
 
 // filters
+const filterByType = ref<string>();
 const searchValue = ref<string>();
 const filterStatus = ref<string|null>(null);
 const showAssignedPatientsOnly = ref<boolean>(true);
@@ -176,8 +199,6 @@ const showPendingModal = ref<boolean>(false);
 
 const onRowClick = (event: any) => {
   const rowData = event.data;
-  
-  console.log('Row clicked:', rowData);
   router.push(`/patient/${rowData.id}`);
 }
 
@@ -193,7 +214,8 @@ const fetchData = async () => {
                 offset: currentPage.value,
                 itemsPerPage: itemsPerPage,
                 doctor_id: showAssignedPatientsOnly.value ? user?.profile?.id : null, 
-                status: 'in_progress'
+                status: 'in_progress',
+                searchValue: searchValue.value, 
             }
         })
 
@@ -228,8 +250,6 @@ const getPendingPatientsCount = async () => {
     });
 
     pendingPatientsCount.value = response.data;
-
-    console.log(response.data)
 
     if(response.error) {
         console.log(response.error);

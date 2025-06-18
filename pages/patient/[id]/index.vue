@@ -56,26 +56,28 @@ const fetchPatientDetails = async() => {
     }
 }
 
-const currentTab = ref<string>();
-const currentComponent = ref();
+const currentTab = ref<string>('diagnosis')
+const currentComponent = ref(markRaw(Diagnosis));
+
 const setCurrentTab = (tab: string) => {
     switch (tab){
         case 'diagnosis': 
-            currentComponent.value = Diagnosis;
+            currentComponent.value = markRaw(Diagnosis);
             break;
         case 'medication': 
-            currentComponent.value = Medications;
+            currentComponent.value = markRaw(Medications);
             break;
         case 'vitals': 
-            currentComponent.value = Vitals;
+            currentComponent.value = markRaw(Vitals);
             break;
         case 'medicalHistory': 
-            currentComponent.value = MedicalHistory;
+            currentComponent.value = markRaw(MedicalHistory);
             break;
         case 'encounterHistory': 
-            currentComponent.value = EncounterHistory;
+            currentComponent.value = markRaw(EncounterHistory);
             break;
     }
+
     currentTab.value = tab;
 }
 
