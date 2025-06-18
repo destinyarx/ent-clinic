@@ -5,13 +5,20 @@ export default defineEventHandler(async (event) => {
     const offset = Number(query.offset); 
     const limit = Number(query.itemsPerPage); // add 1 items to check if there is next page for the table
 
-    // // sample throw erro
-    // throw createError({
-    //     statusCode: 500,
-    //     statusMessage: `Forced Debug Error`,
-    //     data: { limit, offset },
-    // });
-    
-    return await getAllPatients(offset, limit);
+    try {
+        const data = await getAllPatients(offset, limit);
+
+        return {
+            success: true,
+            data: data,
+            error: null
+        }
+    } catch (error) {
+        return {
+            success: false,
+            data: null,
+            error: error instanceof Error ? error.message : "Unknown error",
+        }
+    }
 })
 

@@ -257,23 +257,20 @@ const fetchAllPatients = async () => {
             offset: offset.toString() 
         }).toString();
 
-        const { data, error } = await useFetch(`/api/patient/details/get-all-patients?${params}`);
-
-        if (error.value) {
-            throw new Error(error.value.message || "Failed to fetch patients.");
-        }
+        const response = await $fetch(`/api/patient/details/get-all-patients?${params}`);
 
         // check if there will be a next page for table
-        if (data.value?.length === itemsPerPage.value + 1) {
+        if (response?.data?.length === itemsPerPage.value + 1) {
             hasNextPage.value = true;
-            data.value.pop();
+            response.data.pop();
         } else{
             hasNextPage.value = false;
         }
 
-        patients.value = data.value ?? [];
+        patients.value = response.data ?? [];
     } catch (err) {
         console.error("Error fetching patients:", err.message);
+        throw new Error(err.message || "Failed to fetch patients.");
     } finally {
         loading.value = false;
     }
@@ -282,11 +279,11 @@ const fetchAllPatients = async () => {
 // get all doctors
 const doctors = ref([]);
 const fetchAllDoctors = async () => {
-    const { data, error } = await useFetch(`/api/users/get-all-doctors`);
-    doctors.value = data.value ?? [];
-
-    if (error.value) {
-        throw new Error(error.value.message || "Failed to fetch doctors.");
+    try {
+        const response = await $fetch(`/api/users/get-all-doctors`);
+        doctors.value = response.data ?? [];
+    } catch (error) {
+        throw new Error(error.message || "Failed to fetch doctors.");
     }
 }
 
