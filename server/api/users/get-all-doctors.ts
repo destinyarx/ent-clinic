@@ -12,8 +12,7 @@ export default defineEventHandler(async (event) => {
     } catch (error) {
         throw createError({
             statusCode: 500,
-            statusMessage: `Unexpected error occurs when fetching doctors`,
-            data: null,
+            statusMessage: `Unexpected error occurs when fetching doctors: ${error}`,
         });
     }
 })

@@ -18,14 +18,14 @@
         size="small" stripedRows
         class="w-full max-w-[80rem] min-w-[30rem] rounded-full"
         >
-    
             <template #header>
                 <div class="flex flex-wrap items-center justify-between max-w-[95vw] gap-2">
                     <span class="text-xl font-bold">Patients</span>
 
                     <div class="flex flex-row gap-2 max-w-[70%]">
                         <MultiSelect 
-                            v-model="filterByType" 
+                            v-model="filterByStatus" 
+                            @change="fetchData"
                             :options="visitTypes"
                             display="chip" 
                             optionLabel="name" 
@@ -41,7 +41,12 @@
 
                         <IconField>
                             <InputIcon class="pi pi-search" />
-                            <InputText v-model="searchValue" placeholder="Search" size="small"/>
+                            <InputText 
+                                v-model="searchValue" 
+                                @keydown.enter="fetchData()" 
+                                placeholder="Search" 
+                                size="small"
+                            />
                         </IconField>
                     </div>
                 </div>
@@ -189,9 +194,8 @@ const currentPage = ref<number>(0);
 const itemsPerPage = 10;
 
 // filters
-const filterByType = ref<string>();
-const searchValue = ref<string>();
-const filterStatus = ref<string|null>(null);
+const filterByStatus = ref<any>();
+const searchValue = ref<string>('');
 const showAssignedPatientsOnly = ref<boolean>(true);
 
 // pending patients
@@ -200,6 +204,12 @@ const showPendingModal = ref<boolean>(false);
 const onRowClick = (event: any) => {
   const rowData = event.data;
   router.push(`/patient/${rowData.id}`);
+}
+
+const formatTypeFilter = (filters: object[]) => {
+    if (!filters.length) return null;
+
+    return filters.map(item => String(item.name));
 }
 
 const fetchData = async () => {
@@ -215,14 +225,10 @@ const fetchData = async () => {
                 itemsPerPage: itemsPerPage,
                 doctor_id: showAssignedPatientsOnly.value ? user?.profile?.id : null, 
                 status: 'in_progress',
-                searchValue: searchValue.value, 
+                searchValue: searchValue.value,
+                filterByVisitType: filterByStatus.value?.length ? formatTypeFilter(filterByStatus.value) : []
             }
         })
-
-        if (response.error) {
-            console.log(response.error);
-            return;
-        }
 
         // check if there will be a next page for table
         if (response.data?.length === itemsPerPage + 1) {
@@ -235,7 +241,7 @@ const fetchData = async () => {
         patients.value = response.data ?? [];
         
     } catch (error) {
-        console.log(error);
+        errorNotification('Unable to fetch data due to an unexpected error.')
     } finally {
         loading.value = false;
     }

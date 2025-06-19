@@ -3,7 +3,7 @@ import { fetchPatients } from '@/src/db/queries/encounters'
 export default defineEventHandler(async (event) => {
     type Status = 'open'|'closed'|'in_progress'|'rejected';
 
-    let data;
+    let data = null;
 
     try {
         const query = getQuery(event);
@@ -11,19 +11,20 @@ export default defineEventHandler(async (event) => {
         const limit = Number(query.itemsPerPage) || 10;
         const doctor_id = String(query.doctor_id) ?? null;
         const status = (String(query.status) as Status) ?? null;  
-        
-        data = await fetchPatients(limit, offset, doctor_id, status);
+        const searchValue = String(query.searchValue) ?? null;  
+        const filterByVisitType = query.filterByVisitType;
+
+        data = await fetchPatients(limit, offset, doctor_id, status, searchValue, filterByVisitType);
 
         return {
             success: true,
             data: data,
-            error: null
+            error: null,
         }
     } catch (error) {
-        return {
-            success: false,
-            data: data,
-            error: error instanceof Error ? error.message : "Unknown error",
-        }
+        throw createError({
+            statusCode: 500,
+            statusMessage: `Unexpected error occurs when fetching patients`,
+        });
     }
 })

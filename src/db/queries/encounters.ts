@@ -1,4 +1,4 @@
-import { desc, and, between, count, eq, isNull, isNotNull, sql } from 'drizzle-orm';
+import { desc, and, between, count, eq, isNull, isNotNull, ilike, inArray, or, sql } from 'drizzle-orm';
 import { db } from '../index';
 
 import type { EncounterType } from '../schema/encounter';
@@ -77,7 +77,17 @@ export async function finishVisit(patientId: number, encounterId: number) {
     })
 }
 
-export async function fetchPatients(limit: number, offset: number, doctor_id: string|null, status: Status|null) {
+type FilterByVisitType = string|string[]|null
+
+export async function fetchPatients(limit: number, offset: number, doctor_id: string|null, status: Status|null, searchValue: string, filterByVisitType: FilterByVisitType) {
+    let filterVisits: string[] = [];
+
+    if (typeof filterByVisitType === 'string') {
+        filterVisits.push(filterByVisitType)
+    } else if (Array.isArray(filterByVisitType)){
+        filterVisits = filterByVisitType
+    }
+
     return await db
         .select({
             id: encounters.id,
@@ -101,7 +111,19 @@ export async function fetchPatients(limit: number, offset: number, doctor_id: st
                 isNull(encounters.deletedAt),
                 isNull(encounters.endedAt),
                 doctor_id ? eq(encounters.doctorId, doctor_id) : undefined,
-                status ? eq(encounters.status, status) : undefined
+                status ? eq(encounters.status, status) : undefined,
+
+                searchValue ? 
+                or(
+                    ilike(patients.firstName, `%${searchValue}%`),
+                    ilike(patients.middleName, `%${searchValue}%`),
+                    ilike(patients.lastName, `%${searchValue}%`)
+                )
+                : undefined,
+                
+                filterVisits?.length
+                    ? inArray(encounters.visitType, filterVisits)
+                    : undefined
             )
         )
         .orderBy(desc(encounters.createdAt))
