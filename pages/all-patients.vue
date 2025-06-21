@@ -1,5 +1,9 @@
 <template>
-    <div class="w-full flex flex-wrap justify-center text-sm mt-5 overflow-x-auto">
+    <div class="card flex justify-end mb-2">
+        <Button @click="showPatientModal()" type="button" icon="pi pi-plus-circle" label="Add Patient" class="add-button"/>
+    </div>
+
+    <div class="w-full flex flex-wrap justify-center text-sm overflow-x-auto">
         <DataTable 
             :value="patients" 
             :loading="loading"
@@ -8,12 +12,23 @@
             class="w-full max-w-[80rem] min-w-[30rem] rounded-full">
 
             <template #header>
-                <div class="flex flex-wrap items-center justify-between gap-2">
-                    <span class="text-xl font-bold"></span>
-                    <div class="card flex justify-end">
-                        <Button @click="showPatientModal()" type="button" icon="pi pi-plus-circle" label="Add Patient" class="add-button"/>
+
+                <div class="flex flex-row justify-between">
+                    <div class="text-xl font-bold">
+                        All Patients
                     </div>
+    
+                    <IconField>
+                        <InputIcon class="pi pi-search" />
+                        <InputText 
+                            v-model="searchValue" 
+                            @keydown.enter="triggerSearch" 
+                            placeholder="Search" 
+                            size="small"
+                        />
+                    </IconField>
                 </div>
+                
             </template>
 
             <template #loading> 
@@ -184,7 +199,7 @@ const user = useUserStore();
 const supabaseUser = useSupabaseUser();
 
 
-const { success } = useNotification();
+const { success, errorNotification } = useNotification();
 const { visitTypes } = useConstants();
 const router = useRouter();
 const badgeStore = useBadgeStore();
@@ -232,11 +247,11 @@ const patients = ref();
 const itemsPerPage = ref(10);
 const currentPage = ref(0);
 const hasNextPage = ref(false);
+const searchValue = ref<string>('');
 
 const onRowClick = (event: any) => {
   const rowData = event.data;
   
-  console.log('Row clicked:', rowData);
   router.push(`/patient/${rowData.id}`);
 }
 
@@ -254,7 +269,8 @@ const fetchAllPatients = async () => {
         const limit = itemsPerPage.value + 1;
         const params = new URLSearchParams({ 
             itemsPerPage: limit.toString(), 
-            offset: offset.toString() 
+            offset: offset.toString(),
+            searchValue: searchValue.value
         }).toString();
 
         const response = await $fetch(`/api/patient/details/get-all-patients?${params}`);
@@ -275,6 +291,14 @@ const fetchAllPatients = async () => {
         loading.value = false;
     }
 };
+
+const triggerSearch = () => {
+    if (searchValue.value.length >= 3) {
+        fetchAllPatients();
+    } else {
+        errorNotification('Type three or more characters to search patients.')
+    }
+}
 
 // get all doctors
 const doctors = ref([]);

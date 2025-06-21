@@ -43,7 +43,7 @@
                             <InputIcon class="pi pi-search" />
                             <InputText 
                                 v-model="searchValue" 
-                                @keydown.enter="fetchData()" 
+                                @keydown.enter="triggerSearch" 
                                 placeholder="Search" 
                                 size="small"
                             />
@@ -244,6 +244,14 @@ const fetchData = async () => {
         errorNotification('Unable to fetch data due to an unexpected error.')
     } finally {
         loading.value = false;
+    }
+}
+
+const triggerSearch = () => {
+    if (searchValue.value.length >= 3) {
+        fetchData();
+    } else {
+        errorNotification('Type three or more characters to search patients.')
     }
 }
 

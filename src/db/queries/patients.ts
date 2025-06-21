@@ -1,14 +1,25 @@
-import { asc, desc, between, count, eq, getTableColumns, isNull, sql } from 'drizzle-orm';
+import { and, desc, eq, isNull, or, ilike, sql } from 'drizzle-orm';
 import { db } from '../index';
 import type { InsertPatient } from '../schema/patients';
 import { patients } from '../schema/patients';
 import { encounters } from '../schema/encounter';
 
-export async function getAllPatients(offset: number, limit: number) {
+export async function getAllPatients(offset: number, limit: number, searchValue: string|null) {
     return await db
         .select()
         .from(patients)
-        .where(isNull(patients.deletedAt))
+        .where(
+            and(
+                isNull(patients.deletedAt),
+                searchValue ? 
+                or(
+                    ilike(patients.firstName, `%${searchValue}%`),
+                    ilike(patients.middleName, `%${searchValue}%`),
+                    ilike(patients.lastName, `%${searchValue}%`)
+                )
+                : undefined,
+            )
+        )
         .orderBy(desc(patients.createdAt))
         .limit(limit) 
         .offset(offset); 
