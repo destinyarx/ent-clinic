@@ -11,7 +11,15 @@ export const useDateFormatter = () => {
         return formatted;
   }
 
+  const formatDate = (date: Date | string, dateFormat?: string) => {
+    const rawDate = typeof date === 'string' ? new Date(date) : date;
 
-  return { formatDateTime };
+    if (dateFormat) return format(rawDate, dateFormat)
+
+    return format(rawDate, "MMM'.' d, yyyy");
+  }
+
+
+  return { formatDateTime, formatDate };
 }
 

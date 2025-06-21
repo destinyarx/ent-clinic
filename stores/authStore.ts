@@ -2,16 +2,13 @@
 export interface UserProfile {
   id: string|null
   name: string|null
+  birthdate: string|null,
+  email: string|null
   role: string|null
-  permissions: string[]|null
-}
-
-interface User {
-  id: number
-  first_name: string
-  middle_name: string | null
-  last_name: string
-  role: string
+  permissions: string[]|null,
+  position: string|null,
+  designationArea: string|null,
+  licenseNumber: string|null
 }
 
 interface RolePermission {
@@ -42,8 +39,13 @@ export const useUserStore = defineStore('user', () => {
     profile.value = { 
       id: null, 
       name: null, 
+      birthdate: null,
+      email: null,
       role: null, 
-      permissions: null 
+      permissions: null,
+      position: null,
+      designationArea: null,
+      licenseNumber: null
     }
   }
 
@@ -61,13 +63,13 @@ export const useUserStore = defineStore('user', () => {
       // fetch user info
       const { data: userData, error: userError } = await supabase
         .from('users')
-        .select('id, first_name, middle_name, last_name, role')
+        .select('id, first_name, middle_name, last_name, email, birthdate, role, position, designation_area, license_number')
         .eq('supabase_id', user.id)
         .single();
 
       if (userError || !userData) throw userError ?? new Error('User not found')
 
-      const { id, first_name, middle_name, last_name, role } = userData
+      const { id, first_name, middle_name, last_name, email, birthdate, role, position, designation_area, license_number } = userData
       const fullName = [first_name, middle_name, last_name].join(' ');
 
       // fetch permissions
@@ -82,9 +84,14 @@ export const useUserStore = defineStore('user', () => {
 
       profile.value = { 
         id: supabaseUser.value?.id ?? null, 
-        name: fullName, 
+        name: fullName,
+        designationArea: designation_area,
+        licenseNumber: license_number,
+        permissions: permissionNames,
+        birthdate,
         role, 
-        permissions: permissionNames 
+        position,
+        email,
       }
 
     } catch (e) {

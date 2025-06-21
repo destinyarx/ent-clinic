@@ -19,3 +19,17 @@ export async function getAllDoctors() {
     )
     .orderBy(asc(users.createdAt));
 }
+
+export function update(userInfo: UserType) {
+  return db
+        .update(users)
+        .set({ 
+            role: userInfo.role,
+            position: userInfo.position,
+            email: userInfo.email,
+            birthdate: userInfo.birthdate,
+            licenseNumber: userInfo.licenseNumber,
+            designationArea: userInfo.designationArea
+        })
+        .where(eq(users.supabaseId, userInfo.id));
+}

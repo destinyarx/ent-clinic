@@ -16,6 +16,7 @@ export const users = pgTable(
         licenseNumber: varchar('license_number', { length: 30 }),
         email: varchar('email', { length: 50 }),
         position: varchar('position', { length: 50 }),
+        birthdate: timestamp('birthdate', { mode: 'string' }),
         createdAt: timestamp('created_at', { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
         updatedAt: timestamp('updated_at', { mode: 'string' }),
         deletedAt: timestamp('deleted_at', { mode: 'string' }),

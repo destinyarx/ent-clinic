@@ -22,8 +22,7 @@
                         Birthdate:
                     </div>
                     <div class="italic font-light">
-                        <!-- TODO: plot this with actual data -->
-                        September 23, 1995
+                        {{ authUser?.profile?.birthdate ? formatDate(authUser.profile.birthdate, 'MMMM d, yyyy') : 'None'}}
                     </div>
                 </div>
 
@@ -32,8 +31,7 @@
                         Position:
                     </div>
                     <div class="italic font-light">
-                        <!-- TODO: plot this with actual data -->
-                        Resident Doctor 
+                        {{ authUser?.profile?.position ?? 'None'}}
                     </div>
                 </div>
             </div>
@@ -53,7 +51,7 @@
                         License Number:
                     </div>
                     <div class="italic font-light">
-                        MD12634848584
+                        {{ authUser?.profile?.licenseNumber ?? 'None'}}
                     </div>
                 </div>
 
@@ -62,7 +60,7 @@
                         Email:
                     </div>
                     <div class="italic font-light">
-                        test_doctor@gmail.com
+                        {{ authUser?.profile?.email ?? 'None'}}
                     </div>
                 </div>
             </div>
@@ -73,8 +71,7 @@
                         Area of Designation:
                     </div>
                     <div class="italic font-light">
-                        <!-- TODO: plot this with actual data -->
-                        EMD ENT Clinic Taytay, Rizal
+                        {{ authUser?.profile?.designationArea ?? 'None'}}
                     </div>
                 </div>
 
@@ -105,16 +102,39 @@
 
         <template #footer>
             <div class="flex justify-center mt-4">
-                <Button label="Edit Profile" icon="pi pi-user-edit"/>
+                <Button @click="showFormModal=true" label="Edit Profile" icon="pi pi-user-edit"/>
             </div>
         </template>
     </Card>
+
+    <Dialog 
+        v-model:visible="showFormModal" 
+        header="Update Patient Profile"
+        position="top" 
+        :style="{ width: '75vw' }" 
+        modal
+    >
+
+       <UserProfileForm @success="handleSuccess"/>
+    </Dialog>
 </template>
 
 <script setup lang="ts">
 definePageMeta({ layout: 'authenticated-layout' })
 
-import { useUserStore } from '@/stores/authStore';
+import UserProfileForm from '@/components/Forms/UserProfileForm.vue'
+import { useUserStore } from '@/stores/authStore'
+import { useDateFormatter } from '@/composables/useDateFormatter'
 
-const authUser = useUserStore();
+const authUser = useUserStore()
+const { formatDate } = useDateFormatter()
+const { success } = useNotification()
+
+const showFormModal = ref<boolean>(false)
+
+const handleSuccess = async () => {
+    await authUser.setUserInfo()
+    showFormModal.value = false
+    success('Your info is updated successully')
+}
 </script>

@@ -52,9 +52,7 @@ export async function deletePatient(id: Number) {
         .where(eq(patients.id, id));
 };
 
-export async function updatePatient(patientsInfo: InsertPatient) {
-    console.log(patientsInfo)
-    
+export async function updatePatient(patientsInfo: InsertPatient) {    
     return db
         .update(patients)
         .set({ 
