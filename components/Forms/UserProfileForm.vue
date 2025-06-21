@@ -1,5 +1,4 @@
 <template>
-    {{ user }}
     <Card>
         <template #header>
             <div class="flex flex-wrap flex-col gap-4 mb-5">
