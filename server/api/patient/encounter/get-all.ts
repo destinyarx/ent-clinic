@@ -11,8 +11,8 @@ export default defineEventHandler(async (event) => {
         const limit = Number(query.itemsPerPage) || 10;
         const doctor_id = String(query.doctor_id) ?? null;
         const status = (String(query.status) as Status) ?? null;  
-        const searchValue = String(query.searchValue) ?? null;  
-        const filterByVisitType = query.filterByVisitType;
+        const searchValue = query?.searchValue ? (String(query.searchValue) ?? null) : null;  
+        const filterByVisitType = query?.filterByVisitType ? (query.filterByVisitType ?? null) : null;
 
         data = await fetchPatients(limit, offset, doctor_id, status, searchValue, filterByVisitType);
 

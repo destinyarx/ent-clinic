@@ -79,7 +79,7 @@ export async function finishVisit(patientId: number, encounterId: number) {
 
 type FilterByVisitType = string|string[]|null
 
-export async function fetchPatients(limit: number, offset: number, doctor_id: string|null, status: Status|null, searchValue: string, filterByVisitType: FilterByVisitType) {
+export async function fetchPatients(limit: number, offset: number, doctor_id: string|null, status: Status|null, searchValue?: string|null, filterByVisitType?: FilterByVisitType) {
     let filterVisits: string[] = [];
 
     if (typeof filterByVisitType === 'string') {
