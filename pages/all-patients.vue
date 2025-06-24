@@ -12,7 +12,6 @@
             class="w-full max-w-[80rem] min-w-[30rem] rounded-full">
 
             <template #header>
-
                 <div class="flex flex-row justify-between">
                     <div class="text-xl font-bold">
                         All Patients
@@ -191,8 +190,8 @@ import { nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/authStore'
 import { useBadgeStore } from '@/stores/notificationStore'
-import PatientForm from '@/components/Forms/PatientForm.vue'
-import QueueForm from '@/components/Forms/QueueForm.vue'
+import PatientForm from '@/components/forms/PatientForm.vue'
+import QueueForm from '@/components/forms/QueueForm.vue'
 import { computeAge, describeDateGap  } from '@/utils/helpers'
 
 const user = useUserStore();

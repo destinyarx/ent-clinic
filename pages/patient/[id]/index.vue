@@ -19,8 +19,8 @@ import PatientTabs from '@/components/PatientTabs.vue';
 import Diagnosis from '@/components/medical-record/Diagnosis.vue'
 import Medications from '@/components/medical-record/Medications.vue'
 import Vitals from '@/components/medical-record/Vitals.vue'
-import MedicalHistory from '@/components/history/MedicalHistory.vue'
-import EncounterHistory from '@/components/history/EncounterHistory.vue'
+import MedicalHistory from '@/components/medical-record/history/MedicalHistory.vue'
+import EncounterHistory from '@/components/medical-record/history/EncounterHistory.vue'
 
 interface Patient {
     id: number,

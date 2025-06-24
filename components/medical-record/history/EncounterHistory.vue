@@ -14,6 +14,12 @@
                 </div>
             </template>
 
+            <template #header> 
+                <div class="text-xl font-bold">
+                    Encounter History
+                </div>
+            </template>
+
             <Column header="Length of Stay" style="width: 30%;">
                 <template #body="{ data }">
                     <div class="text-xs">
@@ -93,7 +99,7 @@ const props = defineProps<{
     encounterId: number|null|undefined
 }>();
 
-const encounters = ref([]);
+const encounters = ref<Object[]>();
 const loading = ref<boolean>(false);
 const hasNextPage = ref<boolean>(false);
 const currentPage = ref<number>(0);

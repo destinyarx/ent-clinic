@@ -122,7 +122,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'authenticated-layout' })
 
-import UserProfileForm from '@/components/Forms/UserProfileForm.vue'
+import UserProfileForm from '@/components/forms/UserProfileForm.vue'
 import { useUserStore } from '@/stores/authStore'
 import { useDateFormatter } from '@/composables/useDateFormatter'
 

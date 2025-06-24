@@ -2,21 +2,21 @@
     <div class="flex flex-col text-lg">
         <div class="flex flex-row mb-8">
             <div class="flex flex-row flex-wrap w-1/3 mr-5">
-                <label for="contact" class="text-sm font-light mb-1">
+                <label class="text-sm font-light mb-1">
                     First Name
                 </label>
                 <InputText v-model="props.form.firstName" variant="filled" class="w-full"/>
             </div>
 
             <div class="flex flex-row flex-wrap w-1/3 mr-5">
-                <label for="contact" class="text-sm font-light mb-1">
+                <label class="text-sm font-light mb-1">
                     Middle Name
                 </label>
                 <InputText v-model="props.form.middleName" variant="filled" class="w-full"/>
             </div>
 
             <div class="flex flex-row flex-wrap w-1/3">
-                <label for="contact" class="text-sm font-light mb-1">
+                <label class="text-sm font-light mb-1">
                     Last Name
                 </label>
                 <InputText v-model="props.form.lastName" variant="filled" class="w-full"/>

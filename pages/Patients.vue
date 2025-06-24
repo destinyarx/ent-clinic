@@ -131,7 +131,7 @@
             </Column>
     
             <template #footer v-if="!loading && patients.length">
-                <div v-if="!loading && patients.length" class="flex justify-center items-center gap-4">
+                <div v-if="!loading && patients.length" class="flex justify-center items-center gap-4 text-sm mt-2">
                     <button 
                         @click="currentPage--; fetchData()" 
                         :disabled="currentPage === 0 || loading"
@@ -173,7 +173,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'authenticated-layout' })
 
-import PendingPatientsDT from '@/components/Datatables/PendingPatientsDT.vue'
+import PendingPatientsDT from '@/components/datatables/PendingPatientsDT.vue'
 import { useUserStore } from '@/stores/authStore'
 import { useRouter } from 'vue-router'
 import { computeAge } from '@/utils/helpers'
