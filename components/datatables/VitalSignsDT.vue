@@ -73,6 +73,34 @@
             </template>
         </Column>
 
+        <template #footer v-if="!loading && vitals?.length">
+            <div v-if="!loading && vitals.length" class="flex justify-center items-center gap-4 text-sm mt-2">
+                <button 
+                    @click="currentPage--; fetchData()" 
+                    :disabled="currentPage === 0 || loading"
+                    class="px-2 py-1 border rounded disabled:opacity-50"
+                >
+                    <div class="flex flex-row justify-center items-center">
+                        <i class="pi pi-angle-left"></i>
+                        <div>Previous</div>
+                    </div>
+                </button>
+
+                <span>Page {{ currentPage + 1 }}</span>
+
+                <button 
+                    @click="currentPage++; fetchData()" 
+                    :disabled="!hasNextPage || loading"
+                    class="px-2 py-1 border rounded disabled:opacity-50"
+                >
+                    <div class="flex flex-row justify-center items-center">
+                        <div> Next </div>
+                        <i class="pi pi-angle-right"></i>
+                    </div>
+                </button>
+            </div>
+        </template>
+
     </Datatable>
 </template>
 
