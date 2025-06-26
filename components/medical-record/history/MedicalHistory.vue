@@ -6,7 +6,9 @@
 
 <script setup lang="ts">
 const props = defineProps<{
-    id: number,
-    encounterId: number|null|undefined
+    patient: {
+        id: number,
+        encounterId: number|null|undefined
+    }
 }>();
 </script>

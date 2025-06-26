@@ -1,6 +1,11 @@
 <template>
     <div class="card flex justify-end mb-2">
-        <Button @click="showPatientModal()" type="button" icon="pi pi-plus-circle" label="Add Patient" class="add-button"/>
+        <Button 
+            @click="showPatientModal()" 
+            type="button" 
+            icon="pi pi-plus-circle" 
+            label="Add Patient"
+        />
     </div>
 
     <div class="w-full flex flex-wrap justify-center text-sm overflow-x-auto">

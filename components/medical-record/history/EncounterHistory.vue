@@ -20,7 +20,7 @@
                 </div>
             </template>
 
-            <Column header="Length of Stay" style="width: 30%;">
+            <Column header="Length of Stay" style="width: 30%">
                 <template #body="{ data }">
                     <div class="text-xs">
                         {{ formatDate(data.startedAt) }} - {{ formatDate(data.endedAt) }} 
@@ -31,7 +31,7 @@
                 </template>
             </Column>
 
-            <Column header="Visit Type" style="width: 10%;">
+            <Column header="Visit Type" style="width: 10%">
                 <template #body="{ data }">
                     <div class="text-sm italic">
                         {{ data.visitType }}
@@ -39,7 +39,7 @@
                 </template>
             </Column>
 
-            <Column header="Clinical Concern" style="width: 15%;">
+            <Column header="Clinical Concern" style="width: 15%">
                 <template #body="{ data }">
                     {{ data.category }}
                 </template>
@@ -95,51 +95,53 @@
 import { formatDate, calculateDateTimeGap } from '@/utils/helpers'
 
 const props = defineProps<{
-    id: number,
-    encounterId: number|null|undefined
-}>();
+    patient: {
+        id: number,
+        encounterId: number|null|undefined
+    }
+}>()
 
-const encounters = ref<Object[]>();
-const loading = ref<boolean>(false);
-const hasNextPage = ref<boolean>(false);
-const currentPage = ref<number>(0);
-const itemsPerPage = 10;
+const encounters = ref<Object[]>()
+const loading = ref<boolean>(false)
+const hasNextPage = ref<boolean>(false)
+const currentPage = ref<number>(0)
+const itemsPerPage = 10
 
 const fetchData = async () => {
     try {
-        loading.value = true;
+        loading.value = true
 
         const response = await $fetch<{ success: boolean, data: any[], error?:string }>('/api/patient/encounter/get-history', {
             params: { 
-                id: props.id,
+                id: props.patient.id,
                 offset: currentPage.value,
                 itemsPerPage: itemsPerPage,
             }
         })
 
         if (response.error) {
-            console.log(response.error);
-            return;
+            console.log(response.error)
+            return
         }
 
         // check if there will be a next page for table
         if (response.data?.length === itemsPerPage + 1) {
-            hasNextPage.value = true;
-            response.data.pop();
+            hasNextPage.value = true
+            response.data.pop()
         } else{
-            hasNextPage.value = false;
+            hasNextPage.value = false
         }
 
-        encounters.value = response.data ?? [];
+        encounters.value = response.data ?? []
         
     } catch (error) {
-        console.log(error);
+        console.log(error)
     } finally {
-        loading.value = false;
+        loading.value = false
     }
 }
 
 onMounted(() => {
-    fetchData();
+    fetchData()
 })
 </script>

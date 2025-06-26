@@ -8,7 +8,7 @@
         :status="patient?.status"
     />
 
-    <component :is="currentComponent" :id="patientId" :encounterId="encounterId"/>
+    <component :is="currentComponent" :patient="patientInfo"/>
 </template>
 
 <script setup lang="ts">
@@ -30,11 +30,18 @@ interface Patient {
 }
 
 const { id } = useRoute().params
-const patientId = Number(id)
 const patient = ref<any>()
-const encounterId = ref<number | null>()
+const patientId = Number(id)
 const loading = ref<boolean>(false)
 const error   = ref<Error|null>(null)
+
+const patientInfo = ref<{
+    id: number,
+    encounterId: number|null
+}>({
+    id: patientId,
+    encounterId: null
+})
 
 const gender = {
     'M': 'Male',
@@ -47,7 +54,7 @@ const fetchPatientDetails = async() => {
         loading.value = true;
         const response = await $fetch(`/api/patient/details/get-patient-details?id=${id}`)
         patient.value = response.data.patient;
-        encounterId.value = response.data.encounterId;
+        patientInfo.value.encounterId = response.data.encounterId;
         console.log(patient.value)
     } catch (err) {
         error.value = err instanceof Error ? err : new Error('Unknown fetch error')
