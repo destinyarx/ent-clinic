@@ -1,4 +1,4 @@
-import { destroy } from '~/src/db/queries/queue';
+import { destroy } from '@/src/db/queries/queue';
 
 export default defineEventHandler(async (event) => {
     let id = null;

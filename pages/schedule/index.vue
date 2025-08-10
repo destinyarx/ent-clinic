@@ -11,5 +11,5 @@ definePageMeta({
     layout: 'authenticated-layout',
 })
 
-import scheduleDT from '~/components/datatables/ScheduleDT.vue';
+import scheduleDT from '@/components/datatables/ScheduleDT.vue';
 </script>
