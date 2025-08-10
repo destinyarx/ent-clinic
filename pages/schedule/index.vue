@@ -3,7 +3,7 @@
         Schedule Page
     </div>
 
-    <scheduleDT class="mt-10"/>
+    <ScheduleDT class="mt-10"/>
 </template>
 
 <script setup lang="ts">
@@ -11,5 +11,5 @@ definePageMeta({
     layout: 'authenticated-layout',
 })
 
-import scheduleDT from '@/components/datatables/ScheduleDT.vue';
+import ScheduleDT from '@/components/datatables/ScheduleDT.vue';
 </script>
