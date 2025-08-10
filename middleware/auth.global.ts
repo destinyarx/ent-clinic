@@ -18,8 +18,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         await user.setUserInfo();
     }
 
-    
-
     // If there is no authenticated user and we are not on the login, signup, or root page
     if (!authUser.value && !publicLinks.includes(to.path)) {
         return navigateTo('/auth/login')

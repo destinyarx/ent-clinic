@@ -67,7 +67,7 @@
             </template>
         </Column>
 
-        <Column header="Actions" style="width: 5%;">
+        <Column v-if="type !== 'history'" header="Actions" style="width: 5%;">
             <template #body="{ data }">
                 <SplitButton :model="actions(data)" label="Actions" severity="info" size="small" rounded class="text-xs px-2 py-0"/>
             </template>
