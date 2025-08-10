@@ -7,5 +7,5 @@ definePageMeta({
     layout: 'authenticated-layout',
 })
 
-import QueueDT from '~/components/datatables/QueueDT.vue';
+import QueueDT from '@/components/datatables/QueueDT.vue'
 </script>
