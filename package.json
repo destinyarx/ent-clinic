@@ -23,6 +23,7 @@
     "drizzle-seed": "^0.3.1",
     "jsonwebtoken": "^9.0.2",
     "nuxt": "^3.13.0",
+    "nuxt-api-shield": "^0.8.2",
     "pg": "^8.13.1",
     "pinia-plugin-persistedstate": "^4.3.0",
     "postgres": "^3.4.5",
@@ -38,7 +39,7 @@
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@primevue/nuxt-module": "^4.0.7",
     "autoprefixer": "^10.4.20",
-    "drizzle-kit": "^0.31.1",
+    "drizzle-kit": "^0.18.1",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.11",
     "tsx": "^4.19.1"
