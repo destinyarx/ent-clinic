@@ -52,11 +52,21 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  routeRules: {
+    '/api/**': {
+      cors: true,
+      headers: {
+        'Access-Control-Allow-Origin':  process.env.NUXT_APP_ORIGIN,
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+      }
+    }
+  },
   nitro: {
     storage: {
       ratelimit: {
         driver: 'memory'
-      }
+      },
     }
   },
   nuxtApiShield: {
