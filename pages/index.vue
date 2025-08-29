@@ -1,14 +1,28 @@
 <template> 
     <div class="w-[100vw] grid grid-cols-12 gap-4 grid-nogutter bg-surface-0 dark:bg-surface-950 text-surface-800 dark:text-surface-50">
-        <div class="col-span-12 md:col-span-6 p-12 text-center md:text-left flex items-center ">
-            <section>
-                <span class="block text-6xl font-bold mb-1">Create the screens </span>
-                <div class="text-6xl text-primary font-bold mb-4">your visitors deserve to see</div>
-                <p class="mt-0 mb-6 text-surface-700 dark:text-surface-100 leading-normal">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <div class="flex flex-col items-center justify-center col-span-12 md:col-span-6 pt-12 pb-5 text-center">
+            <div class="h-[80%] flex items-center">
+                <section class="text-left mt-20">
+                    <div class="block text-7xl font-bold mb-1">
+                        ENTCare:
+                    </div>
+                    <div class="block text-6xl font-bold mb-1">
+                        <span class="text-blue-600"> Record.</span>
+                        <span class="text-yellow-500"> Connect.</span>
+                        <span class="text-green-600"> Care.</span>
+                    </div>
+                    <p class="mt-0 mb-6 text-[0.91rem] text-surface-800 dark:text-surface-100 leading-normal mt-2">
+                        Manage patient records with ease, connect your clinic seamlessly, and deliver care that truly matters.
+                    </p>
+    
+                    <!-- <Button label="Learn More" type="button" class="mr-4" raised></Button>
+                    <Button label="Contact" type="button" outlined></Button> -->
+                </section>
+            </div>
 
-                <Button label="Learn More" type="button" class="mr-4" raised></Button>
-                <Button label="Live Demo" type="button" outlined></Button>
-            </section>
+            <div class="h-[20%] flex items-end justify-end -mt-10">
+                <div class="text-sm italic">Created by: Gil Jeremy P. Ditablan @2025</div>
+            </div>
         </div>
         <div class="flex justify-end col-span-12 md:col-span-6 overflow-hidden">
             <img src="/img/landing-page-image.jpg" alt="Image" class="m-auto h-[90vh] w-full" style="clip-path: polygon(8% 0, 100% 0%, 100% 100%, 0 100%)">
