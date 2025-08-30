@@ -54,7 +54,7 @@
             <Column header="Name">
                 <template #body="{ data }">
                     <Avatar 
-                        :label="data.firstName?.charAt(0) ?? 'X'" 
+                        :image="getRandomAvatar(data.gender)"
                         shape="circle" 
                         class="mr-2" style="background-color: #bae6fd; color: #2a1261" 
                     />
@@ -440,6 +440,12 @@ const handleAddToQueue = (id: number) => {
 const queueSuccess = () => {
     showQueueModal.value = false;
     fetchAllPatients();
+}
+
+const getRandomAvatar = (gender: string) => {
+  const id = Math.floor(Math.random() * 99) + 1
+  const selectedGender = gender === 'F' ? 'women' : (gender === 'M' ? 'men' : Math.random() > 0.5 ? 'men' : 'women')
+  return `https://randomuser.me/api/portraits/${selectedGender}/${id}.jpg`
 }
 
 onMounted(async () => {
