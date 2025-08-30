@@ -21,7 +21,15 @@
 
                             <div class="w-3/4 flex flex-col flex-wrap mb-5">
                                 <label for="username" class="font-medium text-xl mb-2">Password</label>
-                                <InputText v-model="password" @keydown.enter="login()" type="text" placeholder="Password"/>
+                                <Password 
+                                    v-model="password" 
+                                    @keydown.enter="login()" 
+                                    :feedback="false" 
+                                    type="text" 
+                                    placeholder="Password" 
+                                    :inputStyle="{ width: '100%' }"
+                                />
+
                                 <div v-if="loginError" class="text-sm text-red-400">
                                     Login failed. Please check your credentials and try again.
                                 </div>

@@ -11,7 +11,7 @@
                         <span class="text-yellow-500"> Connect.</span>
                         <span class="text-green-600"> Care.</span>
                     </div>
-                    <p class="mt-0 mb-6 text-[0.91rem] text-surface-800 dark:text-surface-100 leading-normal mt-2">
+                    <p class="mb-6 text-[0.91rem] text-surface-800 dark:text-surface-100 leading-normal mt-2">
                         Manage patient records with ease, connect your clinic seamlessly, and deliver care that truly matters.
                     </p>
     
