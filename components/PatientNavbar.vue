@@ -2,7 +2,12 @@
     <div class="flex flex-col w-full min-screen">
         <div class="flex flex-row items-center pb-2 mb-4 ">
             <div class="mr-2">
-                <Avatar icon="pi pi-user" class="mr-2 h-24 w-24" size="xlarge" style="background-color: #ece9fc; color: #2a1261" shape="circle" />
+                <Avatar 
+                    :image="getRandomAvatar(props.patient?.gender)"
+                    shape="circle" 
+                    size="xlarge"
+                    class="mr-2 h-24 w-24" 
+                />
             </div>
 
             <div class="flex flex-col justify-start items-start text-sm">
@@ -71,6 +76,14 @@ interface Patient {
 const props = defineProps<{ 
     patient: Patient | undefined
 }>()
+
+const getRandomAvatar = (gender: string|undefined) => {
+    if (!gender) return null
+
+  const id = Math.floor(Math.random() * 99) + 1
+  const selectedGender = gender === 'F' ? 'women' : (gender === 'M' ? 'men' : Math.random() > 0.5 ? 'men' : 'women')
+  return `https://randomuser.me/api/portraits/${selectedGender}/${id}.jpg`
+}
 
 const gender = {
     'M': 'Male',

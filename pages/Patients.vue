@@ -70,9 +70,18 @@
     
             <Column header="Name" style="width: 30%;">
                 <template #body="{ data }">
-                    <span class="text-sm ml-1">
-                        {{ data.patientsFullName }}
-                    </span>
+
+                    <div class="flex flex-row items-center">
+                        <Avatar 
+                            :image="getRandomAvatar(data.gender)"
+                            shape="circle" 
+                            class="mr-2" style="background-color: #bae6fd; color: #2a1261" 
+                        />
+    
+                        <div class="text-sm ml-1">
+                            {{ data.patientsFullName }}
+                        </div>
+                    </div>
                 </template>
             </Column>
     
@@ -253,6 +262,12 @@ const triggerSearch = () => {
     } else {
         errorNotification('Type three or more characters to search patients.')
     }
+}
+
+const getRandomAvatar = (gender: string) => {
+  const id = Math.floor(Math.random() * 99) + 1
+  const selectedGender = gender === 'F' ? 'women' : (gender === 'M' ? 'men' : Math.random() > 0.5 ? 'men' : 'women')
+  return `https://randomuser.me/api/portraits/${selectedGender}/${id}.jpg`
 }
 
 const pendingPatientsCount = ref<number>(0);

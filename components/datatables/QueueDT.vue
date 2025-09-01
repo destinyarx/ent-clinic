@@ -36,6 +36,22 @@
                 </template>
             </Column>
 
+            <Column header="Name" style="width: 30%">
+                <template #body="{ data }">
+                    <div class="flex flex-row items-center">
+                        <Avatar 
+                            :image="getRandomAvatar(data.gender)"
+                            shape="circle" 
+                            class="mr-2" style="background-color: #bae6fd; color: #2a1261" 
+                        />
+    
+                        <div class="text-sm ml-1">
+                         {{ data.patientFullName }}
+                        </div>
+                    </div>
+                </template>
+            </Column>
+
 
             <Column header="Type" style="width: 15%">
                 <template #body="{ data }">
@@ -45,11 +61,7 @@
                 </template>
             </Column>
 
-            <Column header="Name" style="width: 30%">
-                <template #body="{ data }">
-                    {{ data.patientFullName }}
-                </template>
-            </Column>
+           
 
             <Column header="Doctor" style="width: 20%">
                 <template #body="{ data }">
@@ -292,6 +304,12 @@ const badgeColor = (name: string) => {
   if (!match) return '';
 
   return match.color;
+}
+
+const getRandomAvatar = (gender: string) => {
+  const id = Math.floor(Math.random() * 99) + 1
+  const selectedGender = gender === 'F' ? 'women' : (gender === 'M' ? 'men' : Math.random() > 0.5 ? 'men' : 'women')
+  return `https://randomuser.me/api/portraits/${selectedGender}/${id}.jpg`
 }
 
 onMounted(async () => {
