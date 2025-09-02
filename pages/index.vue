@@ -2,7 +2,7 @@
     <div class="w-[100vw] grid grid-cols-12 gap-4 grid-nogutter bg-surface-0 dark:bg-surface-950 text-surface-800 dark:text-surface-50">
         <div class="flex flex-col items-center justify-center col-span-12 md:col-span-6 pt-12 pb-5 text-center">
             <div class="h-[80%] flex items-center">
-                <section class="text-left mt-20">
+                <section class="text-left mt-30">
                     <div class="block text-7xl font-bold mb-1">
                         ENTCare:
                     </div>

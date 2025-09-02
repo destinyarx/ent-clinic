@@ -116,7 +116,7 @@
             <!-- Pagination -->
             <template #footer>
                 <div v-if="!loading && queueList?.length" class="flex justify-center items-center gap-4">
-                    <button 
+                    <Button 
                         @click="currentPage--; fetchQueueList()" 
                         :disabled="currentPage === 0 || loading"
                         class="px-2 py-1 border rounded disabled:opacity-40"
@@ -125,7 +125,7 @@
                             <i class="pi pi-angle-left"></i>
                             <div>Previous</div>
                         </div>
-                    </button>
+                    </Button>
 
                     <span>Page {{ currentPage + 1 }}</span>
 

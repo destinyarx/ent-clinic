@@ -25,7 +25,7 @@
             </ul>
         </div>
 
-        <div class="min-w-full dark:text-zinc-50 mx-5">
+        <div class="min-w-full dark:text-zinc-50 mx-5 -mt-5">
             <slot></slot>
         </div>
     </div>

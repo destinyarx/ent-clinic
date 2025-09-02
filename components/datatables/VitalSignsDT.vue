@@ -75,7 +75,7 @@
 
         <template #footer v-if="!loading && vitals?.length">
             <div v-if="!loading && vitals.length" class="flex justify-center items-center gap-4 text-sm mt-2">
-                <button 
+                <Button 
                     @click="currentPage--; fetchData()" 
                     :disabled="currentPage === 0 || loading"
                     class="px-2 py-1 border rounded disabled:opacity-50"
@@ -84,11 +84,11 @@
                         <i class="pi pi-angle-left"></i>
                         <div>Previous</div>
                     </div>
-                </button>
+                </Button>
 
                 <span>Page {{ currentPage + 1 }}</span>
 
-                <button 
+                <Button 
                     @click="currentPage++; fetchData()" 
                     :disabled="!hasNextPage || loading"
                     class="px-2 py-1 border rounded disabled:opacity-50"
@@ -97,7 +97,7 @@
                         <div> Next </div>
                         <i class="pi pi-angle-right"></i>
                     </div>
-                </button>
+                </Button>
             </div>
         </template>
 
