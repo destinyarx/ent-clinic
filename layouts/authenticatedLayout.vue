@@ -40,7 +40,7 @@
                             </svg>
                         </template>
     
-                        <div class="font-medium">Dashboard</div>
+                        <div class="font-medium text-black">Dashboard</div>
                     </div>
                 </NuxtLink>
 

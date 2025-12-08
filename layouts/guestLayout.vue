@@ -3,11 +3,11 @@
         <div class="flex flex-row justify-between w-full mr-10">
             <div class="flex flex-row justify-start items-center gap-5 mt-2">
                 <NuxtLink to="/">
-                    <img src="/img/entcare.png" alt="avatar" class="rounded-full object-cover w-20 h-20 bg-sky-200 ml-10"/>
+                    <img src="/img/entcare.png" alt="avatar" class="rounded-full object-cover w-16 h-16 bg-sky-200 ml-10"/>
                 </NuxtLink>
     
                 <NuxtLink to="/">
-                    <div class="text-3xl text-cyan-200 mt-3">
+                    <div class="text-2xl text-cyan-200 mt-3">
                         ENT Clinic
                     </div>
                 </NuxtLink>
@@ -17,7 +17,7 @@
             <ul class="flex flex-row justify-center gap-8 align-top text-md">
                 <li v-for="header in headers" class="my-3">
                     <NuxtLink :to="header.path">
-                        <span class="text-2xl" :class="currentPath === header.path ? 'text-cyan-400' : ''">
+                        <span class="text-lg hover:text-sky-600" :class="currentPath === header.path ? 'text-cyan-400' : ''">
                             {{ header.title }} 
                         </span>
                     </NuxtLink>
