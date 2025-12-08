@@ -53,7 +53,8 @@
                         14
                     </p>
                     <p class="mt-1 text-xs text-slate-300">
-                        Waiting in clinic queue
+                        Waiting in clinic queue:
+                        <strong>11</strong>
                     </p>
                     </div>
                     <div class="mt-1 inline-flex items-center justify-center w-9 h-9 rounded-full bg-indigo-500/20">
