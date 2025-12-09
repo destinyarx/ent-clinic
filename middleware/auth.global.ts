@@ -24,6 +24,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
 
     else if (authUser.value && publicLinks.includes(to.path)) {
-        return navigateTo('/dashboard')
+        return navigateTo('/new-dashboard')
     }
 })

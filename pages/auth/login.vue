@@ -88,7 +88,7 @@ const login = async () => {
 
     // proceed to login
     await userStore.setUserInfo();
-    router.push('/dashboard');
+    router.push('/new-dashboard');
 }
 
 </script>
