@@ -1,9 +1,11 @@
 import { addPatient } from '@/src/db/queries/patients';
+import { requireTenantContext } from '@/server/utils/tenantContext';
 
 export default defineEventHandler(async (event) => {
     let patientsInfo = null;
 
     try {
+        const tenant = await requireTenantContext(event);
         const body = await readBody(event);
         const { patientData } = body;
 
@@ -17,7 +19,9 @@ export default defineEventHandler(async (event) => {
             gender: patientData.gender,
             contactNumber: patientData.contactNumber,
             allergies: patientData.allergies,
-            occupation: patientData.occupation
+            occupation: patientData.occupation,
+            orgId: tenant.orgId,
+            createdBy: tenant.supabaseId
         }
 
         const response = await addPatient(patientsInfo);
@@ -27,7 +31,7 @@ export default defineEventHandler(async (event) => {
     } catch (error) {
         return {
             success: false,
-            message: error.message || "Unknown error",
+            message: error instanceof Error ? error.message : "Unknown error",
             data: patientsInfo,
         }
     }

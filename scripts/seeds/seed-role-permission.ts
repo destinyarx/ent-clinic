@@ -42,7 +42,7 @@ async function main() {
             },
         },
         rolePermissions: {
-            count: 7,
+            count: 19,
             columns: {
                 role: f.valuesFromArray({
                     values: [
@@ -54,19 +54,41 @@ async function main() {
 
                     'doctor',
                     'doctor',
+                    'admin',
+                    'admin',
+                    'admin',
+                    'admin',
+                    'admin',
+                    'admin',
+                    'owner',
+                    'owner',
+                    'owner',
+                    'owner',
+                    'owner',
+                    'owner',
                     ],
                 }),
                 permissionId: f.valuesFromArray({
                     values: [
-                        // attendant permission (permissions.id)
                         1,
                         2,
                         3,
                         4,
                         5,
 
-                        // doctors permission
                         4,
+                        6,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
                         6,
                     ],
                 }),

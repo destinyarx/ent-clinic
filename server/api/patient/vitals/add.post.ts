@@ -1,11 +1,14 @@
 import { addVitals } from '@/src/db/queries/patients/vitals';
+import { requireTenantContext } from '@/server/utils/tenantContext';
 
 export default defineEventHandler(async (event) => {
   try {
+    const tenant = await requireTenantContext(event);
     const body = await readBody(event);
-    const { data, patient, creator } = body;
+    const { data, patient } = body;
 
     const vitals = {
+      orgId: tenant.orgId,
       patientId: patient.id,
       encounterId: patient.encounterId,
       diatolic: data.diatolic,
@@ -15,7 +18,7 @@ export default defineEventHandler(async (event) => {
       temperature: data.temperature,
       saturation: data.saturation,
       remarks: data.remarks,
-      createdBy: creator
+      createdBy: tenant.supabaseId
     }
 
     const response = await addVitals(vitals);
@@ -28,7 +31,7 @@ export default defineEventHandler(async (event) => {
     throw createError({
         statusCode: 500,
         statusMessage: 'Unexpected error occurs when inserting vital signs',
-        data: error?.message ?? null
+        data: error instanceof Error ? error.message : null
     });
   }
 });

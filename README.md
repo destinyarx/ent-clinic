@@ -126,8 +126,10 @@ yarn install
 
 ### 5. Migrate the database
 ```bash
-   npx drizzle-kit push
+   npm run db:migrate
 ```
+
+See `docs/overview/DATABASE_MIGRATIONS.md` before creating or applying migrations.
 
 ---
 

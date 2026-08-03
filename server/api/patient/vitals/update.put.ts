@@ -1,9 +1,11 @@
 import { updateVitals } from '@/src/db/queries/patients/vitals';
+import { requireTenantContext } from '@/server/utils/tenantContext';
 
 export default defineEventHandler(async (event) => {
   try {
+    const tenant = await requireTenantContext(event);
     const body = await readBody(event);
-    const { data, updatedBy } = body;
+    const { data } = body;
 
     const vitals = {
         id: data.id,
@@ -14,10 +16,9 @@ export default defineEventHandler(async (event) => {
         temperature: data.temperature,
         saturation: data.saturation,
         remarks: data.remarks,
-        updatedBy: updatedBy
     }
 
-    const response = await updateVitals(vitals);
+    const response = await updateVitals(tenant.orgId, vitals);
 
     return {
       success: true,
@@ -27,7 +28,7 @@ export default defineEventHandler(async (event) => {
     throw createError({
         statusCode: 500,
         statusMessage: 'Unexpected error occurs when inserting vital signs',
-        data: error?.message ?? null
+        data: error instanceof Error ? error.message : null
     });
   }
 });

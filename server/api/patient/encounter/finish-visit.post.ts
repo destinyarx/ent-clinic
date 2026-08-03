@@ -1,14 +1,16 @@
 import { finishVisit } from '@/src/db/queries/encounters'
+import { requireTenantContext } from '@/server/utils/tenantContext'
 
 export default defineEventHandler(async (event) => {
     let data;
 
     try {
+        const tenant = await requireTenantContext(event);
         const query = getQuery(event);
         const patientId = Number(query.patientId);
         const encounterId = Number(query.encounterId);
         
-        await finishVisit(patientId, encounterId);
+        await finishVisit(tenant.orgId, patientId, encounterId);
 
         return {
             success: true,

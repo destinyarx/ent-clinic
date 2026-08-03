@@ -1,16 +1,19 @@
 import { store } from "~/src/db/queries/encounters";
+import { requireTenantContext } from '@/server/utils/tenantContext';
 
 export default defineEventHandler(async (event) => {
     let data;
 
     try {
+        const tenant = await requireTenantContext(event);
         const body = await readBody(event);
-        const { data, createdBy} = body;
+        const { data } = body;
 
         const encounterData = {
             patientId: data.patientId,
+            orgId: tenant.orgId,
             doctorId: data.doctorId,
-            createdBy: data.createdBy,
+            createdBy: tenant.supabaseId,
             visitType: data.visitType,
             category: data.category,
             remarks: data.remarks,

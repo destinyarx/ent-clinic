@@ -1,11 +1,13 @@
 import { update } from '@/src/db/queries/users'
+import { requireAuthenticatedUser } from '@/server/utils/tenantContext'
 
 export default defineEventHandler(async (event) => {
     try {
+        const { authUser } = await requireAuthenticatedUser(event)
         const body = await readBody(event)
         const { user } = body
 
-        await update(user)
+        await update(authUser.id, user)
 
         return {
             success: true,

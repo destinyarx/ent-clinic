@@ -1,78 +1,71 @@
-import { and, desc, eq, isNull, or, ilike, sql } from 'drizzle-orm';
-import { db } from '../index';
-import type { InsertPatient } from '../schema/patients';
-import { patients } from '../schema/patients';
-import { encounters } from '../schema/encounter';
+import { and, desc, eq, ilike, isNull, or, sql } from 'drizzle-orm'
+import { db } from '../index'
+import { encounters } from '../schema/encounter'
+import type { InsertPatient } from '../schema/patients'
+import { patients } from '../schema/patients'
 
-export async function getAllPatients(offset: number, limit: number, searchValue: string|null) {
-    return await db
-        .select()
-        .from(patients)
-        .where(
-            and(
-                isNull(patients.deletedAt),
-                searchValue ? 
-                or(
-                    ilike(patients.firstName, `%${searchValue}%`),
-                    ilike(patients.middleName, `%${searchValue}%`),
-                    ilike(patients.lastName, `%${searchValue}%`)
-                )
-                : undefined,
+export function getAllPatients(orgId: string, offset: number, limit: number, searchValue: string | null) {
+  return db
+    .select()
+    .from(patients)
+    .where(
+      and(
+        eq(patients.orgId, orgId),
+        isNull(patients.deletedAt),
+        searchValue
+          ? or(
+              ilike(patients.firstName, `%${searchValue}%`),
+              ilike(patients.middleName, `%${searchValue}%`),
+              ilike(patients.lastName, `%${searchValue}%`),
             )
-        )
-        .orderBy(desc(patients.createdAt))
-        .limit(limit) 
-        .offset(offset); 
-};
+          : undefined,
+      ),
+    )
+    .orderBy(desc(patients.createdAt))
+    .limit(limit)
+    .offset(offset)
+}
 
-export async function getPatientDetails(id: Number) {
-    const result = db
-      .select({
-        patient: patients,             // ↪︎ all patient columns
-        encounterId: encounters.id
-      })
-      .from(patients)
-      .leftJoin(encounters, eq(encounters.patientId, patients.id))
-      .where(eq(patients.id, id));
+export function getPatientDetails(orgId: string, id: number) {
+  return db
+    .select({ patient: patients, encounterId: encounters.id })
+    .from(patients)
+    .leftJoin(encounters, and(eq(encounters.patientId, patients.id), eq(encounters.orgId, orgId)))
+    .where(and(eq(patients.id, id), eq(patients.orgId, orgId), isNull(patients.deletedAt)))
+}
 
-      return result;
-};
+export function addPatient(patient: InsertPatient) {
+  return db.insert(patients).values(patient).returning({ insertedId: patients.id })
+}
 
-export async function addPatient(patientsInfo: InsertPatient) {
-    return await db
-        .insert(patients)
-        .values(patientsInfo)
-        .returning({ insertedId: patients.id });
-};
+export function deletePatient(orgId: string, id: number) {
+  return db
+    .update(patients)
+    .set({ deletedAt: sql`NOW()` })
+    .where(and(eq(patients.id, id), eq(patients.orgId, orgId)))
+}
 
-export async function deletePatient(id: Number) {
-    return db
-        .update(patients)
-        .set({ deletedAt: sql`NOW()` })
-        .where(eq(patients.id, id));
-};
+export function updatePatient(orgId: string, patient: InsertPatient) {
+  return db
+    .update(patients)
+    .set({
+      firstName: patient.firstName,
+      middleName: patient.middleName,
+      lastName: patient.lastName,
+      gender: patient.gender,
+      birthdate: patient.birthdate,
+      contactNumber: patient.contactNumber,
+      address: patient.address,
+      allergies: patient.allergies,
+      occupation: patient.occupation,
+      updatedAt: sql`NOW()`,
+    })
+    .where(and(eq(patients.id, patient.id!), eq(patients.orgId, orgId)))
+}
 
-export async function updatePatient(patientsInfo: InsertPatient) {    
-    return db
-        .update(patients)
-        .set({ 
-            firstName: patientsInfo.firstName,
-            middleName: patientsInfo.middleName,
-            lastName: patientsInfo.lastName,
-            gender: patientsInfo.gender,
-            birthdate: patientsInfo.birthdate,
-            contactNumber: patientsInfo.contactNumber,
-            address: patientsInfo.address,            
-            allergies: patientsInfo.allergies,            
-            occupation: patientsInfo.occupation,            
-            updatedAt: sql`NOW()`,
-        })
-        .where(eq(patients.id, patientsInfo.id));
-};
-
-export async function updatePatientStatus(id: number, status: string) {
-    return await db
-        .update(patients)
-        .set({ status: status })
-        .where(eq(patients.id, id));
+export function updatePatientStatus(orgId: string, id: number, status: string) {
+  return db
+    .update(patients)
+    .set({ status })
+    .where(and(eq(patients.id, id), eq(patients.orgId, orgId)))
 }

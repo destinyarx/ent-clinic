@@ -7,9 +7,12 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "typecheck": "nuxt typecheck",
     "postinstall": "nuxt prepare",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:check": "drizzle-kit check",
     "introspect": "drizzle-kit pull",
-    "migrate": "drizzle-kit push",
     "seed:role-permission": "npx ts-node scripts/seeds/seed-role-permission.ts"
   },
   "dependencies": {
@@ -17,6 +20,7 @@
     "@pinia/nuxt": "^0.11.0",
     "@primevue/forms": "^4.3.4",
     "@primevue/themes": "^4.0.7",
+    "@tanstack/vue-query": "^5.101.4",
     "chart.js": "^4.5.1",
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.5",
@@ -40,10 +44,12 @@
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@primevue/nuxt-module": "^4.0.7",
     "autoprefixer": "^10.4.20",
-    "drizzle-kit": "^0.18.1",
+    "drizzle-kit": "^0.28.1",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.11",
-    "tsx": "^4.19.1"
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3",
+    "vue-tsc": "^2.2.12"
   },
   "overrides": {
     "vue": "latest"

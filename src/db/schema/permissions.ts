@@ -8,6 +8,6 @@ export const permissions = pgTable('permissions', {
     createdAt: timestamp('created_at', { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
     updatedAt: timestamp('updated_at', { mode: 'string' }),
     deletedAt: timestamp('deleted_at', { mode: 'string' }),
-})
+}).enableRLS()
 
 export type InsertPermissions = typeof permissions.$inferInsert;

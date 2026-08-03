@@ -1,13 +1,15 @@
 import { destroy } from '@/src/db/queries/queue';
+import { requireTenantContext } from '@/server/utils/tenantContext';
 
 export default defineEventHandler(async (event) => {
     let id = null;
 
     try {
+        const tenant = await requireTenantContext(event);
         const body = await readBody(event);
         id = body.id;
 
-        await destroy(id);
+        await destroy(tenant.orgId, id);
 
         return {
             success: true,

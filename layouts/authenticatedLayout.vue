@@ -18,11 +18,21 @@
     
                     <template v-if="!isCollapsed">
                         <div class="text-center font-semibold mt-3">
-                            {{ authUser.profile.name }}
+                            {{ authUser.profile?.name }}
                         </div>
                         <div class="text-center text-gray-800 font-medium italic dark:text-zinc-50">
-                            {{ authUser.profile.role }}
+                            {{ authUser.profile?.role }}
                         </div>
+                        <Select
+                            v-if="organizations && organizations.length > 1"
+                            :model-value="authUser.profile?.activeOrgId"
+                            :options="organizations"
+                            option-label="name"
+                            option-value="id"
+                            aria-label="Active clinic"
+                            class="mt-3 w-full"
+                            @change="changeOrganization"
+                        />
                     </template>
                 </div>
 
@@ -135,15 +145,17 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from 'vue-router';
 import { useUserStore} from '@/stores/authStore';
-import { useBadgeStore } from '@/stores/notificationStore';
+import { useOrganizations, useSelectActiveOrganization } from '@/features/organizations/hooks/useOrganizations';
 
 const router = useRouter();
 const supabase = useSupabaseClient();
 const authUser = useUserStore();
+const { data: organizations } = useOrganizations();
+const selectOrganization = useSelectActiveOrganization();
 
 const isCollapsed = ref(false);
 const currentTab = ref();
@@ -152,8 +164,14 @@ const toggleSidebar = () => {
     isCollapsed.value = !isCollapsed.value;
 };
 
-const setCurrentTab = (tab) => {
+const setCurrentTab = (tab: string) => {
     currentTab.value = tab;
+}
+
+const changeOrganization = async (event: { value: string }) => {
+    await selectOrganization.mutateAsync(event.value);
+    await authUser.setUserInfo();
+    router.go(0);
 }
 
 const logout = async () => {

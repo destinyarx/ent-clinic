@@ -1,7 +1,9 @@
 import { getVitals } from '@/src/db/queries/patients/vitals';
+import { requireTenantContext } from '@/server/utils/tenantContext';
 
 export default defineEventHandler(async (event) => {
   try {
+    const tenant = await requireTenantContext(event);
     const query = getQuery(event);
     const patientId = Number(query.patientId);
     const encounterId = query.encounterId ? Number(query.encounterId) : null;
@@ -9,7 +11,7 @@ export default defineEventHandler(async (event) => {
     const offset = Number(query.offset) || 0;
     const limit = Number(query.itemsPerPage) || 10;
 
-    const data = await getVitals(patientId, encounterId, type, offset, limit);
+    const data = await getVitals(tenant.orgId, patientId, encounterId, type, offset, limit);
 
     return {
       success: true,

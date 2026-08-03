@@ -1,54 +1,47 @@
-import { asc, desc, between, count, eq, getTableColumns, isNull, sql } from 'drizzle-orm';
-import { db } from '../index';
+import { and, asc, eq, isNull, sql } from 'drizzle-orm'
+import { db } from '../index'
+import { patients } from '../schema/patients'
+import type { queueType } from '../schema/queue'
+import { queue } from '../schema/queue'
+import { users } from '../schema/users'
 
-import type { queueType } from '../schema/queue';
-import { patients } from '../schema/patients';
-import { users } from '../schema/users';
-import { queue } from '../schema/queue';
-
-export async function getAllQueue(offset: number, limit: number) {
-    return await db
-        .select({
-            id: queue.id,
-            patientId: queue.patientId,
-            doctorId: queue.doctorId,
-            visitType: queue.visitType,        
-            category: queue.category,        
-            remarks: queue.remarks,        
-            companion: queue.companion,        
-            createdAt: queue.createdAt,        
-            patientFullName: sql<string>`concat_ws(' ', patients.first_name, patients.middle_name, patients.last_name)`,
-            doctorsFullName: sql<string>`concat_ws(' ', users.first_name, users.middle_name, users.last_name)`,
-        })
-        .from(queue)
-        .leftJoin(patients, eq(patients.id, queue.patientId))
-        .leftJoin(users, eq(users.supabaseId, queue.doctorId))
-        .where(isNull(queue.deletedAt))
-        .orderBy(asc(queue.createdAt))
-        .limit(limit)
-        .offset(offset);
+export function getAllQueue(orgId: string, offset: number, limit: number) {
+  return db
+    .select({
+      id: queue.id,
+      patientId: queue.patientId,
+      doctorId: queue.doctorId,
+      visitType: queue.visitType,
+      category: queue.category,
+      remarks: queue.remarks,
+      companion: queue.companion,
+      createdAt: queue.createdAt,
+      patientFullName: sql<string>`concat_ws(' ', ${patients.firstName}, ${patients.middleName}, ${patients.lastName})`,
+      doctorsFullName: sql<string>`concat_ws(' ', ${users.firstName}, ${users.middleName}, ${users.lastName})`,
+    })
+    .from(queue)
+    .leftJoin(patients, and(eq(patients.id, queue.patientId), eq(patients.orgId, orgId)))
+    .leftJoin(users, eq(users.supabaseId, queue.doctorId))
+    .where(and(eq(queue.orgId, orgId), isNull(queue.deletedAt)))
+    .orderBy(asc(queue.createdAt))
+    .limit(limit)
+    .offset(offset)
 }
 
-export async function store(data: queueType) {
-    return await db
-        .insert(queue)
-        .values(data)
-        .returning({ insertedId: queue.id });
+export function store(data: queueType) {
+  return db.insert(queue).values(data).returning({ insertedId: queue.id })
 }
 
-export async function destroy(id: number) {
-    return await db
-        .update(queue)
-        .set({ deletedAt: sql`NOW()` })
-        .where(eq(queue.id, id));
+export function destroy(orgId: string, id: number) {
+  return db
+    .update(queue)
+    .set({ deletedAt: sql`NOW()` })
+    .where(and(eq(queue.id, id), eq(queue.orgId, orgId)))
 }
 
-export async function updateQueueStatus(id: number, type: string) {
-    return await db
-        .update(queue)
-        .set({ 
-            visitType: type,
-            updatedAt: sql`NOW()`           
-        })
-        .where(eq(queue.id, id));
+export function updateQueueStatus(orgId: string, id: number, type: string) {
+  return db
+    .update(queue)
+    .set({ visitType: type, updatedAt: sql`NOW()` })
+    .where(and(eq(queue.id, id), eq(queue.orgId, orgId)))
 }
