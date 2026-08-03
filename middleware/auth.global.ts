@@ -1,29 +1,58 @@
-import { defineNuxtRouteMiddleware, navigateTo } from '#app';
-import { useUserStore } from '@/stores/authStore';
+import { fetchOnboardingStatus } from '@/features/onboarding/services/onboardingService'
+import { useUserStore } from '@/stores/authStore'
 
+const visitorRoutes = new Set([
+  '/',
+  '/auth/login',
+  '/auth/signup',
+  '/auth/callback',
+  '/auth/check-email',
+  '/landingPage',
+  '/contact-us',
+])
 
-const publicLinks = [
-    "/",
-    "/auth/login",
-    "/auth/signup",
-    "/landingPage",
-    "/contact-us"
-];
+const onboardingRoutes = new Set([
+  '/auth/onboarding',
+  '/auth/pending',
+  '/auth/callback',
+  '/auth/check-email',
+])
 
-export default defineNuxtRouteMiddleware(async (to, from) => {
-    const user = useUserStore()
-    const authUser = useSupabaseUser();
+export default defineNuxtRouteMiddleware(async (to) => {
+  const authUser = useSupabaseUser()
+  const userStore = useUserStore()
 
-    if (authUser.value && !user.profile?.id) {
-        await user.setUserInfo();
+  if (!authUser.value) {
+    userStore.signOut()
+
+    if (!visitorRoutes.has(to.path)) {
+      return navigateTo('/auth/login')
     }
 
-    // If there is no authenticated user and we are not on the login, signup, or root page
-    if (!authUser.value && !publicLinks.includes(to.path)) {
-        return navigateTo('/auth/login')
-    }
+    return
+  }
 
-    else if (authUser.value && publicLinks.includes(to.path)) {
-        return navigateTo('/new-dashboard')
+  const { data: status } = await fetchOnboardingStatus()
+
+  if (status.state === 'pending') {
+    if (to.path !== '/auth/pending') {
+      return navigateTo('/auth/pending')
     }
+    return
+  }
+
+  if (status.state === 'onboarding') {
+    if (to.path !== '/auth/onboarding') {
+      return navigateTo('/auth/onboarding')
+    }
+    return
+  }
+
+  if (userStore.profile?.id !== authUser.value.id) {
+    await userStore.setUserInfo()
+  }
+
+  if (visitorRoutes.has(to.path) || onboardingRoutes.has(to.path)) {
+    return navigateTo('/new-dashboard')
+  }
 })

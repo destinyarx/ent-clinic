@@ -8,6 +8,20 @@
       "when": 1785733437396,
       "tag": "20260803050357_add_organization_multi_tenancy",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1785742897766,
+      "tag": "20260803074137_implement_supabase_auth",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785742945068,
+      "tag": "20260803074225_enforce_invite_code_format",
+      "breakpoints": true
     }
   ]
 }

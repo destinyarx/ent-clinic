@@ -1,4 +1,5 @@
-import { index, pgTable, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm'
+import { check, index, pgTable, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
 
 export const organizations = pgTable(
   'organizations',
@@ -12,6 +13,10 @@ export const organizations = pgTable(
   },
   (table) => ({
     inviteCodeUnique: uniqueIndex('organizations_invite_code_unique').on(table.inviteCode),
+    inviteCodeFormat: check(
+      'organizations_invite_code_format_check',
+      sql`${table.inviteCode} ~ '^ENT[A-Z0-9]{4}$'`,
+    ),
     activeOrganizationsIdx: index('organizations_deleted_at_idx').on(table.deletedAt),
   }),
 ).enableRLS()

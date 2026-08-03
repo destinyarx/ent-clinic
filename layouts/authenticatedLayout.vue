@@ -123,6 +123,13 @@
                     </div>
                 </NuxtLink>
 
+                <NuxtLink v-if="canManageClinic" to="/clinic-requests">
+                    <div @click="setCurrentTab('clinicRequests')" class="flex items-center space-x-4 rounded-full mb-3 hover:outline hover:outline-2 hover:outline-blue-300" :class="currentTab === 'clinicRequests' ? 'bg-sky-300 text-zinc-50' : 'bg-gray-200 dark:bg-slate-400'">
+                        <i class="pi pi-users ml-4 flex h-10 w-10 flex-shrink-0 items-center justify-center text-2xl" :class="currentTab === 'clinicRequests' ? 'text-white' : 'text-black'" />
+                        <div class="text-black font-medium">Clinic Requests</div>
+                    </div>
+                </NuxtLink>
+
                 <div @click="setCurrentTab('logout'); logout();" class="flex items-center space-x-4 rounded-full mb-3 hover:outline hover:outline-2 hover:outline-blue-300" :class="currentTab === 'logout' ? 'bg-sky-300 text-zinc-50' : 'bg-gray-200 dark:bg-slate-400'">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-10 h-10 flex-shrink-0 ml-1" :class="{ 'ml-4': !isCollapsed }">
                         <g fill="none" :stroke="currentTab === 'logout' ? '#fff' : '#000'" stroke-linecap="round" stroke-width="1.5">
@@ -159,6 +166,7 @@ const selectOrganization = useSelectActiveOrganization();
 
 const isCollapsed = ref(false);
 const currentTab = ref();
+const canManageClinic = computed(() => authUser.profile?.role === 'owner' || authUser.profile?.role === 'admin');
 
 const toggleSidebar = () => {
     isCollapsed.value = !isCollapsed.value;

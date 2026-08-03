@@ -47,3 +47,13 @@ export async function requireTenantContext(event: H3Event): Promise<TenantContex
     role: membership.role,
   }
 }
+
+export async function requireOrganizationAdministrator(event: H3Event): Promise<TenantContext> {
+  const context = await requireTenantContext(event)
+
+  if (context.role !== 'owner' && context.role !== 'admin') {
+    throw createError({ statusCode: 403, statusMessage: 'Owner or admin access required' })
+  }
+
+  return context
+}

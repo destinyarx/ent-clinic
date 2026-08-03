@@ -1,94 +1,110 @@
 <template>
-    <div class="flex min-h-[85vh] bg-slate-700">
-        <div class="flex justify-center w-1/2">
-            <div class="flex justify-center items-center">
-                <img src="/img/login-cover-image.jpg" alt="Login Page Cover Picture" class="h-[80vh] w-[35vw] rounded-lg block" />
-            </div>
-        </div>
-        <div class="flex items-center justify-center w-1/2">
-            <Card class="w-full mr-20">
-                <template #content>
-                    <div class="w-full">
-                        <div class="flex flex-col justify-center items-center">
-                            <div class="text-center font-semibold text-5xl my-14">
-                                Login 
-                            </div>
-
-                            <div class="w-3/4 flex flex-col flex-wrap mb-10">
-                                <label for="username" class="font-medium text-xl mb-2">Username</label>
-                                <InputText v-model="username" type="text" placeholder="Username" />
-                            </div>
-
-                            <div class="w-3/4 flex flex-col flex-wrap mb-5">
-                                <label for="username" class="font-medium text-xl mb-2">Password</label>
-                                <Password 
-                                    v-model="password" 
-                                    @keydown.enter="login()" 
-                                    :feedback="false" 
-                                    type="text" 
-                                    placeholder="Password" 
-                                    :inputStyle="{ width: '100%' }"
-                                />
-
-                                <div v-if="loginError" class="text-sm text-red-400">
-                                    Login failed. Please check your credentials and try again.
-                                </div>
-                            </div>
-
-                            <div class="flex justify-center">
-                                <Button @click="login" label="Login" severity="success" class="mt-10 mb-5 w-24" rounded/>
-                            </div>
-                        </div>
-                    </div>
-
-                </template>
-            </Card>
-        </div>
+  <div class="flex min-h-[85vh] bg-slate-700">
+    <div class="hidden w-1/2 justify-center lg:flex">
+      <div class="flex items-center justify-center">
+        <img src="/img/login-cover-image.jpg" alt="ENT clinic reception" class="block h-[80vh] w-[35vw] rounded-lg object-cover" />
+      </div>
     </div>
+
+    <div class="flex w-full items-center justify-center px-5 lg:w-1/2">
+      <Card class="w-full max-w-xl lg:mr-20">
+        <template #content>
+          <div class="flex flex-col items-center">
+            <h1 class="my-10 text-center text-5xl font-semibold">Login</h1>
+
+            <div class="flex w-3/4 flex-col gap-3">
+              <Button label="Continue with Google" icon="pi pi-google" severity="secondary" outlined :loading="oauthProvider === 'google'" @click="oauthLogin('google')" />
+              <Button label="Continue with Facebook" icon="pi pi-facebook" severity="info" outlined :loading="oauthProvider === 'facebook'" @click="oauthLogin('facebook')" />
+            </div>
+
+            <div class="my-7 flex w-3/4 items-center gap-3 text-sm text-slate-500">
+              <span class="h-px flex-1 bg-slate-300" />
+              <span>or use email</span>
+              <span class="h-px flex-1 bg-slate-300" />
+            </div>
+
+            <div class="mb-5 flex w-3/4 flex-col">
+              <label for="email" class="mb-2 text-xl font-medium">Email</label>
+              <InputText id="email" v-model="email" type="email" autocomplete="email" placeholder="you@example.com" />
+            </div>
+
+            <div class="mb-5 flex w-3/4 flex-col">
+              <label for="password" class="mb-2 text-xl font-medium">Password</label>
+              <Password id="password" v-model="password" autocomplete="current-password" :feedback="false" placeholder="Password" fluid @keydown.enter="login" />
+              <p v-if="loginError" class="mt-2 text-sm text-red-500" role="alert">{{ loginError }}</p>
+            </div>
+
+            <Button label="Login" severity="success" class="mb-5 mt-6 w-28" rounded :loading="loading" @click="login" />
+            <NuxtLink to="/auth/signup" class="mb-8 text-sm text-sky-700 hover:underline">Create an account</NuxtLink>
+          </div>
+        </template>
+      </Card>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-    layout: "guest-layout"
-});
+import type { Provider } from '@supabase/supabase-js'
+import { fetchOnboardingStatus } from '@/features/onboarding/services/onboardingService'
+import { getApiErrorMessage } from '@/utils/apiError'
 
-import { useRouter } from 'vue-router';
-import { useUserStore } from '@/stores/authStore';
+definePageMeta({ layout: 'guest-layout' })
 
-const router = useRouter();
-const supabase = useSupabaseClient();
+const supabase = useSupabaseClient()
+const router = useRouter()
+const userStore = useUserStore()
+const { errorNotification } = useNotification()
 
-const { errorNotification } = useNotification();
-const userStore = useUserStore();
-
-const username = ref('')
+const email = ref('')
 const password = ref('')
 const loading = ref(false)
-const token = ref()
-const loginError = ref(false);
+const oauthProvider = ref<Provider | null>(null)
+const loginError = ref('')
 
-const user = useSupabaseUser()
-const session = await supabase.auth.getSession();
-token.value = session.data.session?.access_token;
+async function routeAuthenticatedUser() {
+  const { data } = await fetchOnboardingStatus()
 
-const login = async () => {
-    loading.value = true;
+  if (data.state === 'member') {
+    await userStore.setUserInfo()
+    return router.push('/new-dashboard')
+  }
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-        email: username.value,
-        password: password.value,
-    })
-
-    if (error) {
-        errorNotification('Login Failed.');
-        loginError.value = true;
-
-        return;
-    } 
-
-    // proceed to login
-    await userStore.setUserInfo();
-    router.push('/new-dashboard');
+  return router.push(data.state === 'pending' ? '/auth/pending' : '/auth/onboarding')
 }
 
+async function login() {
+  if (!email.value || !password.value || loading.value) return
+
+  loading.value = true
+  loginError.value = ''
+
+  try {
+    const { error } = await supabase.auth.signInWithPassword({ email: email.value.trim(), password: password.value })
+    if (error) throw error
+    await routeAuthenticatedUser()
+  } catch (error) {
+    loginError.value = getApiErrorMessage(error, 'Login failed. Check your credentials and try again.')
+    errorNotification(loginError.value, 'Login failed')
+  } finally {
+    loading.value = false
+  }
+}
+
+async function oauthLogin(provider: 'google' | 'facebook') {
+  if (oauthProvider.value) return
+
+  oauthProvider.value = provider
+  loginError.value = ''
+
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: { redirectTo: `${window.location.origin}/auth/callback` },
+  })
+
+  if (error) {
+    loginError.value = error.message
+    errorNotification(error.message, 'OAuth login failed')
+    oauthProvider.value = null
+  }
+}
 </script>

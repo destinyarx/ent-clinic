@@ -109,17 +109,14 @@ yarn install
 #### <i>Create a .env file in your root:</i>
 ```bash
     SUPABASE_URL=https://your-project.supabase.co
-    SUPABASE_ANON_KEY=your-anon-key
+    SUPABASE_KEY=sb_publishable_your-publishable-key
 ```
 
 #### <i>Then in your nuxt.config.ts:</i>
 ```bash
     export default defineNuxtConfig({
-        runtimeConfig: {
-            public: {
-            supabaseUrl: process.env.SUPABASE_URL,
-            supabaseAnonKey: process.env.SUPABASE_ANON_KEY
-            }
+        supabase: {
+            redirect: false
         }
     })
 ```
@@ -130,6 +127,7 @@ yarn install
 ```
 
 See `docs/overview/DATABASE_MIGRATIONS.md` before creating or applying migrations.
+See `docs/overview/OAUTH_INSTRUCTIONS.md` to configure Google/Facebook providers and redirect URLs.
 
 ---
 

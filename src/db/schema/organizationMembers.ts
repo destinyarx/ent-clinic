@@ -26,8 +26,8 @@ export const organizationMembers = pgTable(
     deletedAt: timestamp('deleted_at', { mode: 'string' }),
   },
   (table) => ({
-    activeMembershipUnique: uniqueIndex('organization_members_active_unique')
-      .on(table.orgId, table.userId)
+    oneActiveMembershipPerUser: uniqueIndex('organization_members_active_user_unique')
+      .on(table.userId)
       .where(sql`${table.deletedAt} is null`),
     userMembershipsIdx: index('organization_members_user_id_idx').on(table.userId, table.deletedAt),
     organizationMembershipsIdx: index('organization_members_org_id_idx').on(table.orgId, table.deletedAt),
